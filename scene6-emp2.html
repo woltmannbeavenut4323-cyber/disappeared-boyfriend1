@@ -515,7 +515,7 @@
                 
                 setTimeout(() => {
                     endVideoSession();
-                }, 5000); 
+                }, 4000); 
             }
         });
 
@@ -588,8 +588,8 @@
         });
 
 
-        // 交互 3：定时故障机制 - 5秒自动强制变成红屏
-        const THREE_MINUTES = 5000; 
+        // 交互 3：定时故障机制 - 15秒自动强制变成红屏
+        const THREE_MINUTES = 15000; 
         
         setTimeout(function horrorEndState() {
             smartScreenLayer.style.display = 'block';
