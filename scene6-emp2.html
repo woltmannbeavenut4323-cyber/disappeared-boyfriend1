@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工档案 - 陈思远 - 京北仿生科技</title>
+    <style>
+        /* --- 核心基础样式 --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: "Microsoft YaHei", -apple-system, sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            overflow-x: hidden;
+        }
+
+        /* --- 布局容器：修改为自适应最大宽度 --- */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px; /* 增加两侧内边距，防边缘死贴 */
+        }
+
+        /* --- 1. 顶部区域 --- */
+        header {
+            width: 100%;
+            min-height: 100px;
+            border-bottom: 2px solid #000000;
+            background-color: #ffffff;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            min-height: 100px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-left img {
+            height: 50px;
+            object-fit: contain;
+        }
+        .header-left span {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .header-right {
+            text-align: right;
+        }
+        .company-cn {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .company-en {
+            font-size: 10px;
+            color: #666666;
+            font-family: Arial, sans-serif;
+        }
+
+        /* --- 2. 主体区域 --- */
+        main {
+            padding: 40px 0;
+            min-height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+        }
+
+        /* 照片外框 - 比例缩小 */
+        .photo-container {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #000;
+            border: 4px double #333;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .photo-container:hover {
+            transform: scale(1.02);
+        }
+        .photo-container img {
+            width: 210px;  /* 尺寸放小 */
+            height: 285px; /* 尺寸放小 */
+            object-fit: cover;
+            display: block;
+            filter: grayscale(100%) contrast(120%);
+        }
+        .photo-container::before {
+            content: "奠";
+            position: absolute;
+            top: -25px;
+            left: calc(50% - 20px);
+            width: 40px;
+            height: 40px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            text-align: center;
+            line-height: 36px;
+            font-size: 18px;
+            font-family: "SimSun", serif;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        /* 日期与状态文本展示区 */
+        .date-display-zone {
+            min-height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        #date-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #444444;
+            letter-spacing: 2px;
+            transition: color 0.5s ease;
+        }
+        #date-text.reclaimed {
+            color: #cc0000 !important;
+            font-size: 22px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        /* 打字机内嵌样式 */
+        .typewriter-inline {
+            font-size: 20px;
+            font-family: "Courier New", Courier, monospace, "SimSun";
+            font-weight: bold;
+            color: #000000;
+            border-right: 2px solid #000;
+            padding-right: 5px;
+            white-space: nowrap;
+            animation: blink-caret .75s step-end infinite;
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: black }
+        }
+
+        /* 员工简介样式 - 修改为自适应最大宽度 */
+        .employee-profile {
+            max-width: 650px;
+            width: 100%;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #444444;
+            text-align: justify;
+            text-indent: 2em;
+            border-top: 1px dashed #ccc;
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        /* --- 3. 互动对话框 (HTML5 Dialog) - 增加宽度自适应 --- */
+        dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #cc0000;
+            background-color: #e5e5e5;
+            padding: 30px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            outline: none;
+            z-index: 100;
+        }
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .dialog-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        dialog label {
+            font-size: 16px;
+            color: #000;
+            font-weight: bold;
+        }
+        dialog input[type="time"] {
+            padding: 10px;
+            font-size: 18px;
+            border: 1px solid #999;
+            text-align: center;
+            outline: none;
+        }
+        dialog button {
+            padding: 10px;
+            background: #cc0000;
+            color: #fff;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        dialog button:hover {
+            background: #990000;
+        }
+
+        /* 全屏网页内置动图播放层 */
+        #video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        #video-overlay img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* --- 4. 页脚区域 --- */
+        footer {
+            width: 100%;
+            min-height: 100px;
+            border-top: 1px solid #000000;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 15px 0;
+        }
+        .footer-copy {
+            font-size: 14px;
+            color: #333333;
+        }
+        .footer-suggest {
+            font-size: 11px;
+            color: #999999;
+        }
+
+        /* --- 5. 网页故障/晃动 特效 --- */
+        .tremble {
+            animation: tremble-anim 0.2s infinite alternate;
+        }
+        @keyframes tremble-anim {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            100% { transform: translate(-1px, -1px) rotate(0.1deg); }
+        }
+
+        /* 错误时引起的轻微晃动 */
+        .error-shake {
+            animation: shake-anim 0.15s infinite;
+        }
+        @keyframes shake-anim {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            20% { transform: translate(-1px, -2px) rotate(-0.5deg); }
+            40% { transform: translate(-3px, 0px) rotate(0.5deg); }
+            60% { transform: translate(0px, 2px) rotate(0deg); }
+            80% { transform: translate(2px, -1px) rotate(0.5deg); }
+            100% { transform: translate(-1px, 1px) rotate(-0.5deg); }
+        }
+
+        /* 屏线叠加层模拟 */
+        body.glitched::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 9999;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            from { opacity: 0.7; }
+            to { opacity: 1; }
+        }
+
+        /* --- 6. 全红报错屏样式 --- */
+        #smartscreen-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #b80000; 
+            color: #ffffff;
+            z-index: 10000;
+            display: none; 
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+            padding-left: 15%;
+            padding-top: 8%;
+        }
+        .ss-container {
+            max-width: 650px;
+        }
+        .ss-icon {
+            font-size: 72px;
+            margin-bottom: 20px;
+            font-family: sans-serif;
+            font-weight: 300;
+        }
+        .ss-title {
+            font-size: 38px;
+            font-weight: 300;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        .ss-host {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 35px;
+        }
+        .ss-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 45px;
+            color: #fce4e4;
+        }
+        .ss-btn {
+            background-color: #ffffff;
+            color: #b80000;
+            border: none;
+            padding: 10px 38px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 35px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .ss-btn:hover {
+            background-color: #f2f2f2;
+        }
+        .ss-link {
+            font-size: 14px;
+            color: #ffffff;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 60px;
+        }
+        .ss-link:hover {
+            text-decoration: underline;
+        }
+        .ss-brand {
+            font-size: 13px;
+            color: #f7a3a3;
+        }
+
+        /* ==========================================================================
+           移动端自适应核心媒体查询规则 (要求1)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            /* 顶部栏排版切换为上下堆叠结构 */
+            .header-content {
+                flex-direction: column;
+                justify-content: center;
+                gap: 10px;
+                padding: 15px 0;
+            }
+            .header-left span {
+                font-size: 18px;
+            }
+            .header-right {
+                text-align: center;
+            }
+            .company-cn {
+                font-size: 13px;
+            }
+            .company-en {
+                font-size: 8px;
+            }
+
+            /* 主内容区域边距调整 */
+            main {
+                padding: 30px 0;
+            }
+
+            /* 简介文本字体调小，提高小屏下的可读性 */
+            .employee-profile {
+                font-size: 14px;
+                line-height: 1.7;
+            }
+
+            /* 底部文字适配 */
+            .footer-copy {
+                font-size: 12px;
+                text-align: center;
+            }
+
+            /* SmartScreen 报错层在手机上的 Padding 优化 */
+            #smartscreen-layer {
+                padding: 40px 20px;
+            }
+            .ss-title {
+                font-size: 28px;
+            }
+            .ss-host {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="normal-page-wrapper">
+        <header>
+            <div class="container header-content">
+                <div class="header-left">
+                    <img src="https://img.cdn1.vip/i/6a1d3b55cc654_1780300629.png" alt="Logo">
+                    <span>京北仿生科技</span>
+                </div>
+                <div class="header-right">
+                    <div class="company-cn">京北仿生科技有限责任公司</div>
+                    <div class="company-en">JINGBEI BIONIC TECHNOLOGY CO., LTD.</div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="photo-container" id="photo-box">
+                    <img id="photo" src="https://img.cdn1.vip/i/6a1eb98fe1cb4_1780398479.webp" alt="员工档案照片">
+                </div>
+
+                <div class="date-display-zone">
+                    <p id="date-text">任职时间：2003年10月 - 2014年10月</p>
+                </div>
+
+                <div class="employee-profile">
+                    陈思远先生担任芯片研发主管，全面负责脑机接口专用集成电路（ASIC）的设计、验证与流片工作。他毕业于加州大学洛杉矶分校（UCLA）集成电路设计专业，曾在美国硅谷顶级半导体公司担任资神架构师，主导过数款用于医疗设备的超低功耗模拟前端芯片的开发。他拥有从28nm到7nm多个工艺节点的成功流片经验，尤其擅长设计具备高输入阻抗、低噪声、多通道并行采集能力的神经信号调理电路。加入公司后，陈思远先生面临的核心挑战是在毫米级的芯片面积内，集成上千个信号放大、滤波、数字化以及无线传输单元，同时保证功耗低至微瓦级别以防止对脑组织产生热损伤。他创新性地采用了事件驱动型模数转换架构和动态电压频率调整技术，成功将单通道功耗降低了40%。在他的带领下，芯片团队在18个月内完成了从概念验证到工程样片的迭代，关键性能指标如输入参考噪声、共模抑制比均达到国际先进水平。陈思远以其卓越的项目管理能力和对细节的极致要求，确保了芯片流片的一次成功率，极大缩短了产品上市周期。
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container" style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                <div class="footer-copy">© 2003-2024 京北仿生科技 版权所有</div>
+                <div class="footer-suggest">建议使用1024×768以上分辨率浏览</div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="video-overlay">
+        <img id="scary-video" src="https://img.cdn1.vip/i/6a1eb9fcdb24d_1780398588.webp" alt="动态效果">
+    </div>
+
+    <dialog id="time-dialog" oncancel="return false;">
+        <div class="dialog-content">
+            <label for="system-time-input">请输入当前系统时间 (格式: HH:MM)</label>
+            <input type="time" id="system-time-input" required>
+            <button id="submit-time">提交</button>
+        </div>
+    </dialog>
+
+
+    <div id="smartscreen-layer">
+        <div class="ss-container">
+            <div class="ss-icon">⚠</div>
+            <div class="ss-title">此网站已被举报不安全</div>
+            <div class="ss-host">托管方 www.chatt-gptt.com</div>
+            <div class="ss-desc">
+                Microsoft 建议你不要继续访问此站点。已向 Microsoft 报告此问题，以阻止可能试图窃取个人或财务信息的钓鱼威胁。
+            </div>
+            <button class="ss-btn" onclick="location.href='scene6-employees.html';">关闭页面</button>
+            <br>
+            <div class="ss-link" onclick="alert('无法展开详细信息：连接已断开');">详细信息 ∨</div>
+            <div class="ss-brand">Microsoft Defender SmartScreen</div>
+        </div>
+    </div>
+
+
+    <script>
+        const photoBox = document.getElementById('photo-box');
+        const videoOverlay = document.getElementById('video-overlay');
+        const scaryVideo = document.getElementById('scary-video');
+        const dateText = document.getElementById('date-text');
+        const timeDialog = document.getElementById('time-dialog');
+        const submitTimeBtn = document.getElementById('submit-time');
+        const systemTimeInput = document.getElementById('system-time-input');
+        const normalPageWrapper = document.getElementById('normal-page-wrapper');
+        const smartScreenLayer = document.getElementById('smartscreen-layer');
+
+        let isVideoPlayed = false; 
+
+        // 交互 1：点击遗照事件
+        photoBox.addEventListener('click', function() {
+            if (!isVideoPlayed) {
+                videoOverlay.style.display = 'flex';
+                
+                setTimeout(() => {
+                    endVideoSession();
+                }, 3000); 
+            }
+        });
+
+        // 结束全屏效果，切换回主页并在任职时间位置触发打字机
+        function endVideoSession() {
+            videoOverlay.style.display = 'none';
+            isVideoPlayed = true; 
+
+            // 清空原有任职时间，替换为打字机结构
+            dateText.innerHTML = '<span id="typewriter-area" class="typewriter-inline"></span>';
+            const typewriterArea = document.getElementById('typewriter-area');
+
+            startTypewriter(typewriterArea, "请问现在是几点？", 0, function() {
+                setTimeout(() => {
+                    timeDialog.showModal();
+                }, 500);
+            });
+        }
+
+        // 打字机核心逻辑
+        function startTypewriter(target, text, i, callback) {
+            if (i < text.length) {
+                target.innerHTML = text.substring(0, i + 1);
+                setTimeout(function() {
+                    startTypewriter(target, text, i + 1, callback);
+                }, 200); 
+            } else {
+                if (callback) callback();
+            }
+        }
+
+        // 交互 2：提交时间并校验电脑当地实际时间
+        submitTimeBtn.addEventListener('click', function() {
+            const userInputValue = systemTimeInput.value;
+            if(userInputValue === "") {
+                alert("请输入有效的时间。");
+                return;
+            }
+            
+            // 获取玩家电脑本地的真实时间
+            const now = new Date();
+            const localHours = String(now.getHours()).padStart(2, '0');
+            const localMinutes = String(now.getMinutes()).padStart(2, '0');
+            const currentLocalTime = `${localHours}:${localMinutes}`;
+
+            // 时间校验比对
+            if (userInputValue !== currentLocalTime) {
+                // 时间错误：触发轻微晃动效果，弹窗不让关闭（重新呼出弹窗）
+                document.body.classList.add('error-shake');
+                alert(`系统时间核对错误！请输入正确的电脑当地时间。`);
+                
+                // 确保模态框保持开启
+                if (!timeDialog.open) {
+                    timeDialog.showModal();
+                }
+                return; 
+            }
+
+            // 时间正确：解除晃动效果，正常向下推进
+            document.body.classList.remove('error-shake');
+            timeDialog.close();
+            
+            // 原位置更替为红字 “已回收”
+            dateText.innerHTML = "已回收";
+            dateText.classList.add('reclaimed');
+
+            // 画面启动网页大故障
+            document.body.classList.add('tremble', 'glitched');
+            normalPageWrapper.classList.add('tremble');
+        });
+
+
+        // 交互 3：定时故障机制 - 35秒自动强制变成红屏
+        const THREE_MINUTES = 35000; 
+        
+        setTimeout(function horrorEndState() {
+            smartScreenLayer.style.display = 'block';
+            document.body.style.overflow = 'hidden'; 
+            document.body.className = ''; 
+        }, THREE_MINUTES);
+
+    </script>
+</body>
+</html>

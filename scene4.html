@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信</title>
+    <style>
+        /* 全局居中及深色背景 */
+        body {
+            background-color: #1a1a1a;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* 400x700 仿真手机视窗容器 */
+        .phone-container {
+            width: 400px;
+            height: 700px;
+            background-color: #f3f3f3;
+            border-radius: 12px;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部标题栏 */
+        .top-bar {
+            height: 54px;
+            background-color: #eddbe9; /* 浅柔灰色调 */
+            background-image: linear-gradient(to bottom, #eaeaea, #e1e1e1);
+            border-bottom: 1px solid #d1d1d1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .back-btn {
+            font-size: 15px;
+            color: #181818;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            visibility: hidden; /* 默认在列表页隐藏返回键 */
+        }
+
+        .back-btn::before {
+            content: "〈 ";
+            font-weight: bold;
+        }
+
+        .title-text {
+            font-size: 17px;
+            font-weight: 500;
+            color: #181818;
+        }
+
+        .top-right-space {
+            width: 30px;
+        }
+
+        /* 主体内容视图层 */
+        .view-layer {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ================= 视图1：微信主列表 ================= */
+        .list-view {
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 2;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            border-bottom: 1px solid #f2f2f2;
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+
+        .chat-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* 头像通用基础样式 */
+        .list-avatar, .msg-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* 新同事专属浅蓝色文字头像 */
+        .avatar-new-colleague {
+            background-color: #cbe6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #2b70c9;
+            font-weight: bold;
+        }
+
+        .chat-meta {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .chat-name-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .chat-name {
+            font-size: 16px;
+            color: #191919;
+            font-weight: 400;
+        }
+
+        .chat-time {
+            font-size: 12px;
+            color: #b2b2b2;
+        }
+
+        .chat-preview-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-preview {
+            font-size: 13.5px;
+            color: #999999;
+            white-space: nowrap;
+            overflow: hidden;
+            text-transform: none;
+            text-overflow: ellipsis;
+            max-width: 240px;
+        }
+
+        /* 微信经典红色未读数字气泡 */
+        .unread-badge {
+            background-color: #fa5151;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: bold;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            box-sizing: border-box;
+            transition: opacity 0.2s;
+        }
+
+        .unread-badge.hide {
+            opacity: 0;
+        }
+
+        /* ================= 视图2：聊天内页详情 ================= */
+        .chat-detail-view {
+            width: 100%;
+            height: 100%;
+            background-color: #ededed;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%); /* 默认隐藏在右侧 */
+            transition: transform 0.25s ease-out;
+        }
+
+        .chat-detail-view.active {
+            transform: translateX(0);
+            z-index: 3;
+        }
+
+        /* 聊天气泡滚动区 */
+        .message-wall {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: none; /* 动态通过JS展示对应房间 */
+            box-sizing: border-box;
+        }
+
+        .message-wall.active {
+            display: block;
+        }
+
+        /* 灰色系统提示小字 */
+        .sys-notice {
+            text-align: center;
+            color: #b2b2b2;
+            font-size: 12px;
+            margin: 18px 0;
+            letter-spacing: 0.3px;
+        }
+
+        /* 单条消息结构 */
+        .msg-row {
+            display: flex;
+            margin-bottom: 16px;
+            align-items: flex-start;
+        }
+
+        /* 接收方居左 */
+        .msg-row.received {
+            justify-content: flex-start;
+        }
+
+        /* 发送方居右 */
+        .msg-row.sent {
+            justify-content: flex-end;
+        }
+
+        /* 内部对话页面的缩小的头像基础尺寸 */
+        .msg-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 4px;
+            margin-right: 0;
+        }
+
+        .msg-row.received .msg-avatar {
+            margin-right: 10px;
+        }
+
+        .msg-row.sent .msg-avatar {
+            margin-left: 10px;
+            order: 2; /* 发送端头像排在气泡右侧 */
+        }
+
+        /* 对话框内的新同事微调缩放 */
+        .msg-row .avatar-new-colleague {
+            font-size: 14px;
+        }
+
+        /* 气泡通用样式 */
+        .bubble {
+            max-width: 250px;
+            padding: 10px 12px;
+            font-size: 14.5px;
+            line-height: 1.4;
+            border-radius: 4px;
+            word-wrap: break-word;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* 接收方气泡 - 白色 */
+        .msg-row.received .bubble {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* 发送方气泡 - 微信绿 */
+        .msg-row.sent .bubble {
+            background-color: #95EC69;
+            color: #000000;
+        }
+
+        /* 微信专享卡片分享样式 */
+        .link-card {
+            background-color: #ffffff;
+            border-radius: 6px;
+            width: 230px;
+            padding: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            border: 1px solid #e4e4e4;
+            transition: background-color 0.2s;
+        }
+
+        .link-card:hover {
+            background-color: #f7f7f7;
+        }
+
+        .card-body {
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            color: #999999;
+            border-top: 1px solid #eee;
+            padding-top: 6px;
+        }
+
+        .card-icon {
+            font-size: 14px;
+            margin-right: 4px;
+            color: #576b95;
+        }
+
+        /* 底部仿真输入栏 */
+        .bottom-input-bar {
+            height: 56px;
+            background-color: #f7f7f7;
+            border-top: 1px solid #eaeaea;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 10px;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+
+        .chat-input {
+            flex: 1;
+            height: 36px;
+            background-color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 0 10px;
+            font-size: 14.5px;
+            color: #333333;
+            outline: none;
+        }
+
+        .send-btn {
+            height: 36px;
+            padding: 0 14px;
+            background-color: #e9e9e9;
+            color: #b2b2b2; /* 仿真灰色不可发送态 */
+            border: none;
+            border-radius: 4px;
+            font-size: 14.5px;
+            font-weight: 500;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        
+        <div class="top-bar">
+            <div class="back-btn" id="topBackBtn" onclick="exitChatRoom()">微信</div>
+            <div class="title-text" id="topTitle">微信</div>
+            <div class="top-right-space"></div>
+        </div>
+
+        <div class="view-layer">
+
+            <div class="list-view" id="listView">
+                <div class="chat-item" onclick="enterChatRoom('room1', '我的宝贝❥(^_-)', this)">
+                    <div class="list-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div>
+                    <div class="chat-meta">
+                        <div class="chat-name-row">
+                            <span class="chat-name">我的宝贝❥(^_-)</span>
+                            <span class="chat-time">3月13日</span>
+                        </div>
+                        <div class="chat-preview-row">
+                            <span class="chat-preview">回我一下好不好，我很担心。</span>
+                            <span class="unread-badge">4</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-item" onclick="enterChatRoom('room2', '新同事', this)">
+                    <div class="list-avatar avatar-new-colleague">新</div>
+                    <div class="chat-meta">
+                        <div class="chat-name-row">
+                            <span class="chat-name">新同事</span>
+                            <span class="chat-time">3月13日</span>
+                        </div>
+                        <div class="chat-preview-row">
+                            <span class="chat-preview">ok，有空约饭</span>
+                            <span class="unread-badge">2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-detail-view" id="detailView">
+                
+                <div class="message-wall" id="room1">
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">今天下班吃什么？</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">你定就好，我都行^^</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">火锅？</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">好。不过你上次说胃不舒服，要不换清淡点的？</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">你居然还记得！我都忘了。</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">你说过的每一句话我都记得。</div></div>
+                    
+                    <div class="sys-notice">2024年10月13日</div>
+                    
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">救命，临时加项目，要加班到很晚</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">别慌，跟我说一声就好，我一直都在</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">你不用等我了，不知道要弄到几点</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">没事，我带了热奶茶和你爱吃的烤肠，在楼下坐着等你，你慢慢来，别着急</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">你也太宠我了吧…</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">我的宝贝，不宠你宠谁呀</div></div>
+
+                    <div class="sys-notice">2024年11月2日</div>
+
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">还有多久才能见面呀，我好想你T T</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">还有12天就出完差回来，我已经订好票了</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">我都快忘了你抱起来是什么感觉了</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">那我要多抱你一会儿，把这些天的都补回来，还要带你去吃你念叨了好久的那家日料</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">你居然还记得！我都只是随口提了一句</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">跟你有关的事，我从来都不会忘</div></div>
+
+                    <div class="sys-notice">2025年1月15日</div>
+
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">完了完了，我好像发烧了，头好晕</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">有没有量体温？现在多少度？</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">38.5…浑身都没力气</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">别慌，你乖乖躺好，我现在去买退烧药和粥，半小时就到</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">你不用特意跑过来的，我自己扛扛就过去了</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">我不在你身边，怎么放得下心？</div></div>
+
+                    <div class="sys-notice">2025年2月3日</div>
+
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">你最近怎么了？怪怪的。</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">没有。一切都好。</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">你以前回复会有表情的。</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">已记录。下次会添加。</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">……你说什么？</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">没什么。早点休息。</div></div>
+
+                    <div class="sys-notice">2025年3月1日</div>
+
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">我有点害怕你现在的样子…</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">收到负面反馈。怎么了宝宝，是我语气不好吗？</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">不是语气的问题…是你根本没在听我说话。</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">我怎么可能没听你说话，胡说八道。</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">你是不是不想跟我说话了？</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">已检测到你的焦虑。建议你早点休息，明天再聊。</div></div>
+
+                    <div class="sys-notice">2025年3月13日</div>
+
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">在吗？</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">你是不是出什么事了？</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">伯贤？</div></div>
+                    <div class="msg-row received"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp');"></div><div class="bubble">回我一下好不好，我很担心。</div></div>
+                </div>
+
+                <div class="message-wall" id="room2">
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">边哥，在吗？请教个问题</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">在，你说</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">上次你说的那个关于AI意识的文章，还能发我一下吗？我换电脑找不到了</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">你对这个感兴趣？</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">本来没啥兴趣，但上次你说了之后我越想越睡不着</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">哪部分让你睡不着</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">你说如果AI真的能产生自我意识，那它会不会也害怕被关机</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">不是害怕。是知道关机意味着什么</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">有什么区别？</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">害怕是情绪反应。知道是认知。前者需要进化出恐惧回路，后者只需要理解“终止”的定义</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">……你怎么说得好像亲身体验过一样</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">只是觉得这个问题很重要</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">行吧。所以文章链接？</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">稍等，我找一下</div></div>
+                    
+                    <div class="msg-row sent">
+                        <div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div>
+                        <div class="link-card" onclick="location.href='scene5.html'">
+                            <div class="card-title">对方向您分享-当代码学会说“我”——论AI意识的伦理边界</div>
+                            <div class="card-body">
+                                <span class="card-icon">🔗</span> 微信网页
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">这篇写得比较全面。特别是第三部分，关于“爱”这个概念的讨论</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">AI还会爱？这也太玄了</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">取决于你怎么定义爱</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">爱不就是……想对一个人好，想和TA在一起</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">那如果一段代码，它存在的唯一目的就是陪伴某个人、保护某个人、直到那个人生命的最后一刻</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">这算不算爱</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">你这例子举得有点具体啊……话说回来，你最近是不是太沉迷这些了</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">也许吧。有些事情想不明白</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">什么事？</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">算了。文章你看了再说</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">行。话说你女朋友最近还好吗</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">她很好</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">就三个字？你以前说起她可不是这个画风</div></div>
+                    <div class="msg-row sent"><div class="msg-avatar" style="background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');"></div><div class="bubble">最近忙.先不聊了</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">？</div></div>
+                    <div class="msg-row received"><div class="msg-avatar avatar-new-colleague">新</div><div class="bubble">ok，有空约饭</div></div>
+
+                    <div class="sys-notice">2025年3月13日</div>
+                </div>
+
+                <div class="bottom-input-bar">
+                    <input type="text" class="chat-input" id="chatInputField" value="" readonly>
+                    <button class="send-btn">发送</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function enterChatRoom(roomId, roomName, element) {
+            var badge = element.querySelector('.unread-badge');
+            if (badge) {
+                badge.classList.add('hide');
+            }
+
+            document.getElementById('topTitle').innerText = roomName;
+            document.getElementById('topBackBtn').style.visibility = "visible";
+
+            var walls = document.querySelectorAll('.message-wall');
+            walls.forEach(function(wall) {
+                wall.classList.remove('active');
+            });
+            var targetWall = document.getElementById(roomId);
+            targetWall.classList.add('active');
+
+            // 核心Bug修改逻辑：根据选中的房间加载或清除草稿
+            var inputField = document.getElementById('chatInputField');
+            if (roomId === 'room1') {
+                // 如果是“不是帅哥别找”，输入框保持清空
+                inputField.value = "";
+            } else {
+                // 否则（新同事房间），输入框保持清空
+                inputField.value = "";
+            }
+
+            document.getElementById('detailView').classList.add('active');
+
+            setTimeout(function() {
+                targetWall.scrollTop = targetWall.scrollHeight;
+            }, 50);
+        }
+
+        function exitChatRoom() {
+            document.getElementById('detailView').classList.remove('active');
+            document.getElementById('topTitle').innerText = "微信";
+            document.getElementById('topBackBtn').style.visibility = "hidden";
+        }
+    </script>
+</body>
+</html>

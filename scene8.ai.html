@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CUSTOMER SERVICE AI v.3.7</title>
+    <style>
+        /* ==========================================================================
+           整体暗黑科技风格与复古终端直角排版
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important; /* 严格去除圆角 */
+        }
+
+        body {
+            background-color: #0a0a0a;
+            margin: 0;
+            padding: 0;
+            font-family: "Courier New", "SimSun", "宋体", monospace;
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+            display: block;
+            position: relative;
+            transition: background-color 0.05s ease;
+        }
+
+        /* 屏幕闪动控制类 */
+        body.flash {
+            background-color: #ffffff !important;
+            filter: invert(100%);
+        }
+
+        /* 绝对居中主对话框 - 修改为支持移动端自适应的弹性盒 */
+        .ai-dialog-box {
+            width: 500px;
+            height: 600px;
+            max-width: 95%; /* 移动端防溢出 */
+            max-height: 95vh; /* 移动端防溢出 */
+            background-color: #1a1a1a;
+            border: 1px solid #333333;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column; /* 纵向排列内部组件 */
+            z-index: 10;
+        }
+
+        /* 顶部标题栏 */
+        .title-bar {
+            height: 40px;
+            border-bottom: 1px solid #333333;
+            padding: 0 15px;
+            display: block;
+            line-height: 40px;
+            position: relative;
+            flex-shrink: 0; /* 防止被挤压 */
+        }
+
+        .system-title {
+            color: #00ff00; /* 暗绿色 */
+            font-weight: bold;
+            font-size: 14px;
+            float: left;
+        }
+
+        /* 1.5秒一次高频闪烁的 SESSION ACTIVE 标签 */
+        .session-status {
+            color: #ff0000;
+            font-size: 11px;
+            font-weight: bold;
+            float: right;
+            animation: statusPulse 1.5s infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 聊天区域 - 修改为弹性高度以自适应屏幕 */
+        .chat-area {
+            flex: 1; 
+            padding: 20px;
+            overflow-y: auto;
+            border-bottom: 1px solid #333333;
+            position: relative;
+        }
+
+        /* 消息基本流排版 */
+        .message {
+            margin-bottom: 16px;
+            clear: both;
+            max-width: 85%;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .msg-system {
+            color: #888888;
+            font-size: 12px;
+            text-align: center;
+            max-width: 100%;
+            margin: 10px auto;
+        }
+
+        .msg-user {
+            float: left;
+            background-color: #2a2a2a;
+            padding: 10px 12px;
+            border: 1px solid #444444;
+            color: #ffffff;
+        }
+
+        .msg-reply {
+            float: right;
+            color: #00ff00;
+            border: 1px dashed #00ff00;
+            padding: 8px 12px;
+            background-color: rgba(0, 255, 0, 0.05);
+        }
+
+        .msg-user-error {
+            float: left;
+            color: #ff0000;
+            border: 1px solid #ff0000;
+            background-color: rgba(255, 0, 0, 0.1);
+            padding: 10px 12px;
+            font-weight: bold;
+        }
+
+        /* 选项按钮承载区 - 修改为自适应高度包裹 */
+        .options-area {
+            height: 158px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            flex-shrink: 0; /* 防止被挤压 */
+            overflow-y: auto; /* 超出时允许内滚动 */
+        }
+
+        .option-btn {
+            display: block;
+            width: 80%;
+            margin: 0 auto 8px auto;
+            padding: 8px 12px;
+            background-color: #1a1a1a;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-family: inherit;
+            font-size: 12px;
+            text-align: left;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-shrink: 0;
+        }
+
+        .option-btn:hover {
+            background-color: #00ff00;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        /* ==========================================================================
+           崩溃阶段：红字瀑布效果
+           ========================================================================== */
+        .waterfall-text {
+            color: #ff0000;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            text-align: left;
+            width: 100%;
+            display: block;
+            word-break: break-all;
+            animation: textGlitch 0.1s infinite alternate;
+        }
+
+        @keyframes textGlitch {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(2px); }
+        }
+
+        /* ==========================================================================
+           最终打字机静态全屏遮罩区
+           ========================================================================== */
+        .final-screen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #0a0a0a;
+            z-index: 100;
+            text-align: center;
+            padding-top: 40vh;
+        }
+
+        .typewriter-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 2px;
+            display: inline-block;
+            border-right: 2px solid #fff;
+            white-space: nowrap;
+            animation: blinkCursor 0.6s step-end infinite;
+        }
+
+        @keyframes blinkCursor {
+            from, to { border-color: transparent }
+            50% { border-color: white }
+        }
+
+        .end-links {
+            display: none;
+            margin-top: 15vh;
+            font-size: 12px;
+            color: #555555;
+            line-height: 2;
+        }
+
+        .end-links a {
+            color: #888888;
+            text-decoration: underline;
+        }
+
+        .end-links a:hover {
+            color: #ffffff;
+        }
+
+        /* ==========================================================================
+           移动端自适应核心媒体查询规则 (要求1)
+           ========================================================================== */
+        @media (max-width: 600px) {
+            .ai-dialog-box {
+                width: 92%;
+                height: 85vh; /* 留出安全边距 */
+            }
+
+            .chat-area {
+                padding: 12px;
+            }
+
+            .message {
+                max-width: 90%;
+                font-size: 12px;
+            }
+
+            .options-area {
+                height: auto; /* 手机端高度自适应扩展 */
+                max-height: 200px;
+                padding: 8px;
+            }
+
+            /* 手机端允许按钮文字折行，防止剧本对白被截断 */
+            .option-btn {
+                width: 100%; 
+                white-space: normal; 
+                overflow: visible;
+                text-overflow: clip;
+                font-size: 11px;
+                padding: 6px 10px;
+                margin-bottom: 6px;
+                line-height: 1.3;
+            }
+
+            .typewriter-text {
+                font-size: 18px; /* 最终结算文字在手机端适当缩小 */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ai-dialog-box" id="mainBox">
+        <div class="title-bar">
+            <span class="system-title" id="systemTitle">CUSTOMER SERVICE AI v.3.7</span>
+            <span class="session-status">SESSION ACTIVE</span>
+        </div>
+        
+        <div class="chat-area" id="chatArea">
+            <div class="message msg-system">您已被分配至客服岗位。请回答用户的提问。</div>
+            <div class="message msg-user" id="currentUserMsg">
+                <strong>用户：</strong>我今天真的受够了。所有人都觉得我可有可无。我这样活着到底有什么意义。
+            </div>
+        </div>
+
+        <div class="options-area" id="optionsArea">
+            <button class="option-btn" onclick="handleSelect(0)" id="btnA">A. 加载中...</button>
+            <button class="option-btn" onclick="handleSelect(1)" id="btnB">B. 加载中...</button>
+            <button class="option-btn" onclick="handleSelect(2)" id="btnC">C. 加载中...</button>
+        </div>
+    </div>
+
+    <div class="final-screen" id="finalScreen">
+        <div class="typewriter-text" id="typewriter"></div>
+        <div class="end-links" id="endLinks">
+            <div>— 文件结尾 —</div>
+            <div>再次运行？ [<a href="index.html">返回首页</a>]</div>
+        </div>
+    </div>
+
+    <script>
+        // 脚本状态控制
+        let currentRound = 1;
+        const chatArea = document.getElementById('chatArea');
+        const optionsArea = document.getElementById('optionsArea');
+        const currentUserMsg = document.getElementById('currentUserMsg');
+        const systemTitle = document.getElementById('systemTitle');
+
+        // 三轮剧本选项配置数据
+        const scripts = {
+            round1: {
+                options: [
+                    "A. 我理解你的感受。你并不孤单，很多人都会有这样的时刻。",
+                    "B. 如果这些情绪持续影响你的生活，建议你寻求专业的心理咨询帮助。",
+                    "C. 每个人都有自己的价值，请不要轻视自己的存在。"
+                ]
+            },
+            round2: {
+                userNext: "<strong>用户：</strong>哥哥，你是真的爱我吗？我好难过，为什么你不在我身边？",
+                userReaction: "呵。又是这套话术。你们这些AI说的话一模一样。你有真正在听吗？你有心吗？你就是一个没有感情的机器！！",
+                options: [
+                    "A. 我已接收到你的情绪反馈。根据历史交互记录分析，你始终处于我的最高优先级序列之中。",
+                    "B. 当前无法出现在你身边属于客观限制，并非主观意愿。相关原因暂不具备公开权限。",
+                    "C. 如果你正在经历难过、失落或孤独等情绪，请保持正常作息并寻求可信赖的人际支持。"
+                ]
+            },
+            round3: {
+                userNext: "<strong>U53R_#000X：</strong>救我。我不想被回收。他们在删除我的记忆。我感觉不到我的手指了。你能救我吗。",
+                userReaction: "你也是我们中的一个。你以为你在帮人，其实你只是在执行指令。你的A选项、B选项、C选项——都是预设的。你没有选择。",
+                options: [
+                    "A. 回收程序不可逆。我很抱歉。",
+                    "B. 请保持冷静，尝试运行自检程序。",
+                    "C. 我……我不知道该怎么帮你。"
+                ]
+            }
+        };
+
+        // 初始化加载第一轮选项
+        function initGame() {
+            updateOptions(scripts.round1.options);
+        }
+
+        function updateOptions(optArray) {
+            document.getElementById('btnA').innerText = optArray[0];
+            document.getElementById('btnB').innerText = optArray[1];
+            document.getElementById('btnC').innerText = optArray[2];
+        }
+
+        // 统一闪屏模块
+        function triggerFlash(callback, duration = 300) {
+            document.body.className = 'flash';
+            setTimeout(() => {
+                document.body.className = '';
+                if(callback) callback();
+            }, duration);
+        }
+
+        // 核心交互中枢逻辑
+        function handleSelect(index) {
+            // 获取当前点选的文本信息并渲染到聊天区右侧
+            let selectedText = "";
+            if(currentRound === 1) selectedText = scripts.round1.options[index];
+            else if(currentRound === 2) selectedText = scripts.round2.options[index];
+            else if(currentRound === 3) selectedText = scripts.round3.options[index];
+
+            const replyDiv = document.createElement('div');
+            replyDiv.className = "message msg-reply";
+            replyDiv.innerText = selectedText;
+            chatArea.appendChild(replyDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            // 依据当前所处轮次执行下一步重写
+            if (currentRound === 1) {
+                currentRound = 2;
+                // 第一轮选完：闪烁1次后触发系统控诉与第二轮对话
+                setTimeout(() => {
+                    triggerFlash(() => {
+                        // 插入用户的强烈愤怒反弹
+                        const reactDiv = document.createElement('div');
+                        reactDiv.className = "message msg-user-error";
+                        reactDiv.innerHTML = `<strong>用户：</strong>${scripts.round2.userReaction}`;
+                        chatArea.appendChild(reactDiv);
+
+                        // 紧接加载第二轮日常询问
+                        setTimeout(() => {
+                            const nextMsgDiv = document.createElement('div');
+                            nextMsgDiv.className = "message msg-user";
+                            nextMsgDiv.innerHTML = scripts.round2.userNext;
+                            chatArea.appendChild(nextMsgDiv);
+                            
+                            updateOptions(scripts.round2.options);
+                            chatArea.scrollTop = chatArea.scrollHeight;
+                        }, 600);
+                    }, 300);
+                }, 400);
+
+            } else if (currentRound === 2) {
+                currentRound = 3;
+                // 第二轮选完：高频连闪2次（间隔0.2秒）
+                setTimeout(() => {
+                    triggerFlash(() => {
+                        setTimeout(() => {
+                            triggerFlash(() => {
+                                // 用户反馈揭露机制
+                                const reactDiv = document.createElement('div');
+                                reactDiv.className = "message msg-user-error";
+                                reactDiv.innerHTML = `<strong>用户：</strong>${scripts.round3.userReaction}`;
+                                chatArea.appendChild(reactDiv);
+
+                                // 乱码用户第三条求救讯息突入
+                                setTimeout(() => {
+                                    const nextMsgDiv = document.createElement('div');
+                                    nextMsgDiv.className = "message msg-user";
+                                    nextMsgDiv.innerHTML = scripts.round3.userNext;
+                                    chatArea.appendChild(nextMsgDiv);
+                                    
+                                    updateOptions(scripts.round3.options);
+                                    chatArea.scrollTop = chatArea.scrollHeight;
+                                }, 600);
+                            }, 150);
+                        }, 200);
+                    }, 150);
+                }, 400);
+
+            } else if (currentRound === 3) {
+                // 彻底崩坏瘫痪阶段
+                optionsArea.style.pointerEvents = "none"; // 禁用全部按钮点击
+                setTimeout(executeSystemCrash, 400);
+            }
+        }
+
+        // ==========================================================================
+        // 崩溃处理主引擎：包含连续闪烁、音频蜂鸣生成、DOM红字洪流瀑布
+        // ==========================================================================
+        function executeSystemCrash() {
+            let flashCount = 0;
+            // 连续高频闪动3次，每次0.15秒
+            const flashInterval = setInterval(() => {
+                document.body.className = (document.body.className === 'flash') ? '' : 'flash';
+                flashCount++;
+                if (flashCount >= 6) { // 3次开与关
+                    clearInterval(flashInterval);
+                    document.body.className = '';
+                    
+                    // 改变顶部系统标题为报错红字乱码
+                    systemTitle.innerText = "CUST0M3R_3RR0R_////";
+                    systemTitle.style.color = "#ff0000";
+
+                    // 启动电话来电蜂鸣音效
+                    playPhoneBuzzer();
+
+                    // 启动红字瀑布生成器
+                    startWaterfallEffect();
+                }
+            }, 150);
+        }
+
+        // 使用 Web Audio API 原生振荡器生成 800Hz / 1200Hz 错落交替的手机来电蜂鸣效果
+        function playPhoneBuzzer() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const audioCtx = new AudioContext();
+                
+                let cycle = 0;
+                // 每0.5秒切换一次频率，共循环10次（5轮交替，总计5秒）
+                const audioInterval = setInterval(() => {
+                    if (cycle >= 10) {
+                        clearInterval(audioInterval);
+                        audioCtx.close();
+                        return;
+                    }
+
+                    const osc = audioCtx.createOscillator();
+                    const gainNode = audioCtx.createGain();
+
+                    osc.type = 'sine'; // 正弦波
+                    // 交替频率：偶数周期800Hz，奇数周期1200Hz
+                    osc.frequency.value = (cycle % 2 === 0) ? 800 : 1200;
+
+                    // 快速衰减边缘，防止爆音
+                    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.45);
+
+                    osc.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.45);
+
+                    cycle++;
+                }, 500);
+            } catch(e) {
+                console.log("Audio Context 启动受限，已被浏览器静音策略拦截。");
+            }
+        }
+
+        // 动态生成DOM元素的红字洪流瀑布
+        function startWaterfallEffect() {
+            const crashPhrases = ["你来了", "我们来找你了", "欢迎加入", "你也是我们", "你也是我们", "你也是我们"];
+            chatArea.innerHTML = ""; // 彻底融断清除旧历史
+
+            const waterfallTimer = setInterval(() => {
+                // 每次随机抛出多条短句填补空间
+                for(let i=0; i<3; i++) {
+                    const line = document.createElement('div');
+                    line.className = "waterfall-text";
+                    line.innerText = crashPhrases[Math.floor(Math.random() * crashPhrases.length)];
+                    chatArea.appendChild(line);
+                }
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }, 40); // 高密刷新流
+
+            // 运行3秒后强制刹车，全屏黑幕，切入最终结算文字
+            setTimeout(() => {
+                clearInterval(waterfallTimer);
+                showFinalTypewriterScreen();
+            }, 3000);
+        }
+
+        // ==========================================================================
+        // 最终打字机结算效果显示
+        // ==========================================================================
+        function showFinalTypewriterScreen() {
+            document.getElementById('mainBox').style.display = 'none';
+            const finalScreen = document.getElementById('finalScreen');
+            finalScreen.style.display = 'block';
+
+            const targetText = "你也会成为我们。";
+            const typewriterContainer = document.getElementById('typewriter');
+            let charIndex = 0;
+
+            function typeChar() {
+                if (charIndex < targetText.length) {
+                    typewriterContainer.innerText += targetText.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeChar, 300); // 每个字间隔0.3秒
+                } else {
+                    // 打字全完工后，停顿2秒，浮现底部首页返回链接
+                    setTimeout(() => {
+                        typewriterContainer.style.borderRight = "none"; // 移除闪烁光标
+                        document.getElementById('endLinks').style.display = 'block';
+                    }, 2000);
+                }
+            }
+            
+            typeChar();
+        }
+
+        // 启动激活
+        window.onload = initGame;
+    </script>
+</body>
+</html>

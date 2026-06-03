@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工档案 - 李国栋 - 京北仿生科技</title>
+    <style>
+        /* --- 核心基础样式 --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: "Microsoft YaHei", -apple-system, sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            overflow-x: hidden;
+        }
+
+        /* --- 布局容器：修改为响应式最大宽度 --- */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px; /* 移动端两侧防贴边留白 */
+        }
+
+        /* --- 1. 顶部区域 --- */
+        header {
+            width: 100%;
+            min-height: 100px;
+            border-bottom: 2px solid #000000;
+            background-color: #ffffff;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 100px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-left img {
+            height: 50px;
+            object-fit: contain;
+        }
+        .header-left span {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .header-right {
+            text-align: right;
+        }
+        .company-cn {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .company-en {
+            font-size: 10px;
+            color: #666666;
+            font-family: Arial, sans-serif;
+        }
+
+        /* --- 2. 主体区域 --- */
+        main {
+            padding: 40px 0;
+            min-height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+        }
+
+        /* 照片外框 */
+        .photo-container {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #000;
+            border: 4px double #333;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .photo-container img {
+            width: 210px;
+            height: 285px;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(100%) contrast(120%);
+        }
+        .photo-container::before {
+            content: "奠";
+            position: absolute;
+            top: -25px;
+            left: calc(50% - 20px);
+            width: 40px;
+            height: 40px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            text-align: center;
+            line-height: 36px;
+            font-size: 18px;
+            font-family: "SimSun", serif;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        /* 日期与状态文本展示区 */
+        .date-display-zone {
+            min-height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        #date-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #444444;
+            letter-spacing: 2px;
+            transition: color 0.5s ease;
+            text-align: center;
+        }
+        #date-text.reclaimed {
+            color: #cc0000 !important;
+            font-size: 22px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { opacity: 0.7; }
+            to { opacity: 1; }
+        }
+
+        /* 员工简介样式 - 修改宽度使其支持弹性收缩 */
+        .employee-profile {
+            width: 100%;
+            max-width: 650px;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #444444;
+            text-align: justify;
+            text-indent: 2em;
+            border-top: 1px dashed #ccc;
+            padding-top: 20px;
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+
+        /* 返回跳转互动按钮 */
+        .back-btn {
+            display: inline-block;
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 10px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .back-btn:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        /* --- 3. 页脚区域 --- */
+        footer {
+            width: 100%;
+            min-height: 100px;
+            border-top: 1px solid #000000;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 0;
+        }
+        .footer-copy {
+            font-size: 14px;
+            color: #333333;
+            text-align: center;
+        }
+        .footer-suggest {
+            font-size: 11px;
+            color: #999999;
+            text-align: center;
+        }
+
+        /* ==========================================================================
+           移动端媒体查询适配（要求1）
+           ========================================================================== */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 0;
+            }
+            .header-content {
+                flex-direction: column;
+                gap: 12px;
+                justify-content: center;
+                text-align: center;
+            }
+            .header-left {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .header-right {
+                text-align: center;
+            }
+            .company-cn {
+                font-size: 14px;
+            }
+            .company-en {
+                font-size: 9px;
+            }
+
+            main {
+                padding: 30px 0;
+            }
+
+            .employee-profile {
+                font-size: 14px;
+                line-height: 1.7;
+                text-indent: 2em;
+                margin-bottom: 30px;
+            }
+
+            #date-text {
+                font-size: 16px;
+            }
+            #date-text.reclaimed {
+                font-size: 19px;
+            }
+
+            .back-btn {
+                width: 100%;
+                max-width: 250px;
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="normal-page-wrapper">
+        <header>
+            <div class="container header-content">
+                <div class="header-left">
+                    <img src="https://img.cdn1.vip/i/6a1d3b55cc654_1780300629.png" alt="Logo">
+                    <span>京北仿生科技</span>
+                </div>
+                <div class="header-right">
+                    <div class="company-cn">京北仿生科技有限责任公司</div>
+                    <div class="company-en">JINGBEI BIONIC TECHNOLOGY CO., LTD.</div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="photo-container">
+                    <img id="photo" src="https://img.cdn1.vip/i/6a1ecd39db523_1780403513.webp" alt="员工档案照片">
+                </div>
+
+                <div class="date-display-zone">
+                    <p id="date-text">任职时间：2003年10月 - 2014年10月</p>
+                </div>
+
+                <div class="employee-profile">
+                   李国栋博士担任公司首席技术官，是技术战略的顶层设计者与核心技术难题的攻坚带头人。他拥有麻省理工学院电子工程与计算机科学博士学位，并在神经接口领域拥有超过十二年的研究经验。在加入本公司之前，他曾是全球知名脑机接口研究机构的核心研究员，主导过多项美国国防部高级研究计划局（DARPA）资助的下一代神经技术项目。李国栋博士专攻高带宽、低侵入式的神经信号采集与处理架构，其发表的学术论文被引用超过8000次，并拥有30余项已授权或正在申请中的国际专利。在公司内，他负责统筹芯片研发、人工智能算法、神经科学三大技术板块的协同工作，确立了“感、算、控”一体化的技术路线。他带领团队成功研发出了第三代高密度柔性电极阵列，其生物相容性与信号信噪比均达到行业领先水平。李国栋博士以其严谨的工程思维和对前沿技术近乎偏执的追求而闻名，他常说：“精度每提升一个百分点，我们距离真正理解大脑就更近一步。”他每周亲自参与技术评审会，确保每个技术方案的工程可实现性与可靠性。
+                </div>
+
+                <a href="scene6-employees.html" class="back-btn">返回员工列表</a>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container" style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                <div class="footer-copy">© 2003-2024 京北仿生科技 版权所有</div>
+                <div class="footer-suggest">建议使用1024×768以上分辨率浏览</div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const dateText = document.getElementById('date-text');
+
+        // 停留 10 秒后，任职时间直接变成 “已回收”
+        setTimeout(function() {
+            dateText.innerHTML = "已回收";
+            dateText.classList.add('reclaimed');
+        }, 10000); // 10000 毫秒 = 10 秒
+    </script>
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工档案 - 边伯贤 - 京北仿生科技</title>
+    <style>
+        /* ==========================================================================
+           1. 正常官网页面样式 (2000年代经典红白直角企业风格)
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important;
+        }
+
+        body {
+            background-color: #F5F5F5;
+            margin: 0;
+            padding: 0;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", "微软雅黑", sans-serif;
+            font-size: 13px;
+            color: #333333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 居中主容器 - 修改为最大宽度自适应 */
+        .wrapper {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-left: 1px solid #D3D3D3;
+            border-right: 1px solid #D3D3D3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.5s ease;
+        }
+
+        /* 顶部导航栏 */
+        .navbar {
+            width: 100%;
+            min-height: 45px;
+            background-color: #B52322;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap; /* 允许移动端换行 */
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-links a {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            border-right: 1px solid #D65352;
+            height: 45px;
+        }
+
+        .nav-links a:last-child {
+            border-right: none;
+        }
+
+        .nav-links a:hover {
+            background-color: #D65352;
+            text-decoration: none;
+        }
+
+        /* 主体内容 */
+        .main-content {
+            padding: 30px;
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 20px;
+            color: #B52322;
+            font-weight: bold;
+            border-bottom: 2px solid #B52322;
+            padding-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        /* 档案核心布局 - 默认响应式自适应包裹 */
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        /* PC端恢复原本的横向并排布局 */
+        @media (min-width: 769px) {
+            .profile-container {
+                flex-direction: row;
+                gap: 30px;
+            }
+        }
+
+        .photo-box {
+            width: 150px;
+            height: 180px;
+            border: 1px solid #999999;
+            background-color: #EFEFEF;
+            padding: 2px;
+            flex-shrink: 0;
+        }
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #CCCCCC;
+        }
+
+        .info-table th, .info-table td {
+            border: 1px solid #CCCCCC;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .info-table th {
+            background-color: #EFEFEF;
+            color: #333333;
+            font-weight: bold;
+            width: 100px;
+            text-align: center;
+        }
+
+        .intro-p {
+            text-indent: 2em;
+            margin: 0 0 10px 0;
+            text-align: justify;
+        }
+        
+        .intro-p:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-highlight {
+            color: #FF0000;
+            font-weight: normal;
+        }
+
+        .footer {
+            width: 100%;
+            border-top: 2px solid #B52322;
+            background-color: #EFEFEF;
+            padding: 15px 0;
+            text-align: center;
+            color: #666666;
+            font-size: 12px;
+            margin-top: 40px;
+        }
+
+        /* ==========================================================================
+           2. 额外剧情互动样式 (故障黑屏界面)
+           ========================================================================== */
+        #glitchOverlay {
+            display: none; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000;
+            z-index: 9999;
+            color: #ffffff;
+            font-family: "Courier New", "Terminal", "SimSun", monospace;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 故障艺术字体样式 - 使用 vw/vh 配合确保移动端字号缩放正确 */
+        .glitch-text-display {
+            font-size: 5.5vw;
+            line-height: 1.4;
+            max-width: 90%;
+            word-break: break-all;
+            color: #FFFFFF; /* 固定为白色 */
+            display: none;
+            position: absolute;
+            /* 故障文本抖动与闪烁组合动画 */
+            animation: textGlitchBlink 0.2s infinite alternate, textShake 0.15s infinite;
+        }
+
+        /* 针对大屏PC端限制故障字体的最大极限尺寸，保持原视觉比例 */
+        @media (min-width: 769px) {
+            .glitch-text-display {
+                font-size: calc(100vh / 15);
+                max-width: 85%;
+            }
+        }
+
+        /* 字幕故障闪烁动画 */
+        @keyframes textGlitchBlink {
+            0%, 85% { opacity: 1; text-shadow: 2px 0 0 rgba(255,0,0,0.5), -2px 0 0 rgba(0,0,255,0.5); }
+            90%, 100% { opacity: 0.3; text-shadow: none; }
+        }
+
+        /* 字幕微弱位置震颤（增强微型计算机故障感） */
+        @keyframes textShake {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-1px, 1px); }
+            100% { transform: translate(1px, -1px); }
+        }
+
+        /* 屏幕双闪烁动画 */
+        @keyframes systemBlink {
+            0%, 49% { background-color: #000000; }
+            50%, 100% { background-color: #1A1A1A; }
+        }
+
+        .trigger-blink {
+            animation: systemBlink 0.15s ease-in-out infinite;
+        }
+
+        /* ==========================================================================
+           3. 心电图波动动画与组件样式
+           ========================================================================== */
+        .ecg-container {
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* 确保包裹盒在移动端自适应收缩 */
+        .ecg-svg-box {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            overflow: hidden;
+        }
+
+        /* 允许SVG图形按宽度等比动态拉伸 */
+        .ecg-svg-box svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .ecg-path {
+            stroke: #FF0000;
+            stroke-width: 3;
+            fill: none;
+            stroke-dasharray: 2000;
+            stroke-dashoffset: 2000;
+            animation: drawEcg 4s linear infinite;
+        }
+
+        @keyframes drawEcg {
+            0% { stroke-dashoffset: 2000; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        /* 心跳红点相对容器缩放定位 */
+        .heart-node {
+            position: absolute;
+            left: 7%;
+            top: 33%;
+            color: #FF0000;
+            font-size: 24px;
+            animation: heartbeat 0.4s infinite alternate;
+        }
+
+        @media (min-width: 769px) {
+            .heart-node {
+                left: 35px;
+                top: 60px;
+            }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.3); }
+        }
+
+        .back-btn-box {
+            margin-top: 40px;
+            display: block;
+            width: 100%;
+        }
+
+        .back-link {
+            color: #B52322;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            border: 2px solid #B52322;
+            padding: 8px 20px;
+            background-color: #110000;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            max-width: 90%;
+        }
+
+        @media (min-width: 769px) {
+            .back-link {
+                font-size: 18px;
+                padding: 8px 25px;
+            }
+        }
+
+        .back-link:hover {
+            background-color: #B52322;
+            color: #FFFFFF;
+            text-shadow: none;
+        }
+
+        /* ==========================================================================
+           4. 专属移动端核心自适应覆盖规则 (要求1)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            /* 移除多余边框线 */
+            .wrapper {
+                border-left: none;
+                border-right: none;
+            }
+
+            /* 导航改写：两列平铺，最后一项单独满宽 */
+            .nav-links a {
+                flex: none;
+                width: 50%;
+                border-bottom: 1px solid #D65352;
+            }
+            .nav-links a:nth-child(2n) {
+                border-right: none;
+            }
+            .nav-links a:last-child {
+                width: 100%;
+                border-bottom: none;
+                border-right: none;
+            }
+
+            /* 内边距微调 */
+            .main-content {
+                padding: 15px;
+            }
+
+            .page-title {
+                font-size: 18px;
+                margin-bottom: 18px;
+            }
+
+            /* 移动端照片居中排布 */
+            .photo-box {
+                margin: 0 auto;
+            }
+
+            /* 表格比例缩减防止超出 */
+            .info-table th {
+                width: 80px;
+                padding: 8px 5px;
+                font-size: 12px;
+            }
+            .info-table td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper" id="pageWrapper">
+        
+        <div class="navbar">
+            <div class="nav-links">
+                <a href="scene6.html">【首页】</a>
+                <a href="#">【关于我们】</a>
+                <a href="#">【新闻中心】</a>
+                <a href="#">【员工风采】</a>
+                <a href="#">【联系我们】</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h1 class="page-title">员工档案 - 边伯贤</h1>
+
+            <div class="profile-container">
+                
+                <div class="photo-box">
+                    <img src="https://img.cdn1.vip/i/6a1e6bd394900_1780378579.webp" alt="边伯贤">
+                </div>
+
+                <table class="info-table">
+                    <tr>
+                        <th>姓名</th>
+                        <td>边伯贤</td>
+                    </tr>
+                    <tr>
+                        <th>职位</th>
+                        <td>数据分析员</td>
+                    </tr>
+                    <tr>
+                        <th>入职时间</th>
+                        <td>2003年5月</td>
+                    </tr>
+                    <tr>
+                        <th>个人介绍</th>
+                        <td>
+                            <p class="intro-p">边伯贤先生是数据分析团队的重要成员，主要负责神经信号数据的预处理、清洗及初步特征提取工作。他拥有应用统计学学士学位，并熟练掌握Python、MATLAB及多种数据处理工具包。</p>
+                            <p class="intro-p">虽然加入公司时间不长，但他以极快的学习速度和严谨细致的工作态度赢得了团队的信任。边伯贤的日常工作包括：接收来自临床试验和动物实验的海量多通道神经数据（每天可达TB级别），识别并自动标注数据中的各类伪迹（如肌电干扰、运动噪声），进行滤波、重参考、尖峰检测等预处理操作，并为高级数据分析师和算法工程师提供干净、结构化、可追溯的数据集。他自主开发了多个自动化数据质检脚本，显著提高了数据处理的通量 and 可重复性。同时，他负责维护部门的神经信号数据库，确保数据的安全存储、合规使用和版本管理。</p>
+                            <p class="intro-p">边伯贤虽然不直接设计算法，但他深知高质量的数据是一切分析工作的基石，常常主动与实验团队沟通，从源头优化数据采集质量。他细心、踏实、善于合作，是数据科学链条中默默无闻却又不可或缺的一环。</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>当前状态</th>
+                        <td class="status-highlight">任职时间：2003年10月-2014年10月</td>
+                    </tr>
+                    <tr>
+                        <th>备注</th>
+                        <td style="color: #999999; font-style: italic;">无</td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2003-2014 京北仿生科技 版权所有
+        </div>
+
+    </div>
+
+
+    <div id="glitchOverlay">
+        
+        <div class="glitch-text-display" id="sub1">“我是边伯贤。你……还记得我吗？”</div>
+        <div class="glitch-text-display" id="sub2">“他们没能找到我”</div>
+        <div class="glitch-text-display" id="sub3">“别担心。我很好...这句话是真的。”</div>
+        <div class="glitch-text-display" id="sub4">“我知道你好奇到底发生了什么”</div>
+        <div class="glitch-text-display" id="sub5">“往后走吧，你会知道一切”</div>
+        <div class="glitch-text-display" id="sub6">“我爱你。从未离开，从未改变”</div>
+        <div class="glitch-text-display" id="sub7">“密码1：B12_REC”</div>
+
+        <div class="ecg-container" id="ecgModule">
+            
+            
+            <div class="ecg-svg-box">
+                <svg width="500" height="150" viewBox="0 0 500 150">
+                    <path class="ecg-path" d="M 0 75 L 40 75 L 50 40 L 60 110 L 70 75 L 110 75 L 115 10 L 122 140 L 130 75 L 160 75 L 165 50 L 172 100 L 178 75 L 200 75 L 205 20 L 212 130 L 218 75 L 240 75 L 245 0 L 253 150 L 260 75 L 300 75 L 306 45 L 312 95 L 318 75 L 350 75 L 355 15 L 362 135 L 368 75 L 400 75 L 405 30 L 412 110 L 418 75 L 450 75 L 456 5 L 464 145 L 472 75 L 500 75" />
+                </svg>
+            </div>
+
+            <div class="back-btn-box">
+                <a href="scene6-employees.html" class="back-link">
+                    ◀ 返回 核心研发团队
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // 黑屏计时：玩家进入页面后 3.5秒（3500ms）
+            setTimeout(executeGlitchSequence, 3500);
+        });
+
+        function executeGlitchSequence() {
+            const pageWrapper = document.getElementById('pageWrapper');
+            const overlay = document.getElementById('glitchOverlay');
+            
+            // 启用全屏黑色层，并开始高频闪烁两下
+            overlay.style.display = "flex";
+            overlay.classList.add('trigger-blink');
+
+            // 闪烁约 600ms 后切换为死黑状态，隐藏原网页并开启字幕排序
+            setTimeout(() => {
+                overlay.classList.remove('trigger-blink');
+                pageWrapper.style.display = "none"; 
+                startSubtitleQueue();
+            }, 600);
+        }
+
+        function startSubtitleQueue() {
+            // 字幕每 2 秒（2000ms）进行一次交替变换，加入第7条密码字幕
+            const steps = [
+                { id: 'sub1', delay: 0 },
+                { id: 'sub2', delay: 2000 },
+                { id: 'sub3', delay: 4000 },
+                { id: 'sub4', delay: 6000 },
+                { id: 'sub5', delay: 8000 },
+                { id: 'sub6', delay: 10000 },
+                { id: 'sub7', delay: 12000 } // 第7条密码字幕在 12 秒时呼出
+            ];
+
+            steps.forEach((step) => {
+                setTimeout(() => {
+                    hideAllSubtitles();
+                    document.getElementById(step.id).style.display = "block";
+                }, step.delay);
+            });
+
+            // 在最后一个字幕（第7条）完整展示 2 秒并消失后（即 14000ms 时），才呼出心电图
+            setTimeout(() => {
+                hideAllSubtitles();
+                document.getElementById('ecgModule').style.display = "flex";
+            }, 14000);
+        }
+
+        function hideAllSubtitles() {
+            const subs = document.querySelectorAll('.glitch-text-display');
+            subs.forEach(s => s.style.display = "none");
+        }
+    </script>
+</body>
+</html>

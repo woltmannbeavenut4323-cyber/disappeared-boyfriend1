@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>微信</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1a1a1a;
+      font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    }
+
+    .window {
+      width: 400px;
+      height: 700px;
+      background: #2c2c2c;
+      border-radius: 12px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.6), 0 4px 16px rgba(0,0,0,.4);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: fadeIn .3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(.97); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* ── Title bar ── */
+    .titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .titlebar-title {
+      font-size: 14px;
+      color: #d0d0d0;
+      font-weight: 500;
+      letter-spacing: .5px;
+    }
+
+    .titlebar-actions { display: flex; gap: 6px; }
+
+    .icon-btn {
+      width: 30px; height: 30px;
+      border: none; background: transparent;
+      cursor: pointer; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s; color: #999;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,.08); color: #ccc; }
+    .icon-btn.close:hover { background: #e81123; color: #fff; }
+
+    /* ── Content ── */
+    .content {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 30px; gap: 28px;
+    }
+
+    /* ── Avatar ── */
+    .avatar-wrapper {
+      width: 120px; height: 120px;
+      border-radius: 20px; overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+      flex-shrink: 0;
+    }
+    .avatar-wrapper img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block;
+    }
+
+    /* ── Username ── */
+    .username {
+      color: #fff; font-size: 18px;
+      font-weight: 500; letter-spacing: .3px; text-align: center;
+    }
+
+    /* ── Button ── */
+    .enter-btn {
+      width: 70%; padding: 13px 0;
+      background: #07C160; color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 16px; font-weight: 500; font-family: inherit;
+      letter-spacing: 1px; cursor: pointer;
+      transition: background .18s, transform .1s, box-shadow .18s;
+      box-shadow: 0 4px 16px rgba(7,193,96,.25);
+    }
+    .enter-btn:hover { background: #06ad56; box-shadow: 0 6px 20px rgba(7,193,96,.35); }
+    .enter-btn:active { background: #059748; transform: scale(.98); }
+
+    /* ── Footer ── */
+    .footer-links { display: flex; align-items: center; margin-top: 8px; }
+    .footer-link {
+      font-size: 13px; color: #888; cursor: pointer;
+      padding: 4px 14px; transition: color .15s;
+      text-decoration: none; white-space: nowrap;
+    }
+    .footer-link:hover { color: #bbb; }
+    .footer-divider { width: 1px; height: 13px; background: #555; }
+  </style>
+</head>
+<body>
+
+<div class="window">
+  <div class="titlebar">
+    <span class="titlebar-title">微信</span>
+    <div class="titlebar-actions">
+      <button class="icon-btn" title="设置">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+      <button class="icon-btn close" title="关闭" onclick="window.close()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="avatar-wrapper">
+      <img src="https://img.cdn1.vip/i/6a1c38a503f7d_1780234405.webp">
+    </div>
+    <div class="username">不是帅哥别找</div>
+    <button class="enter-btn" onclick="location.href='scene1.html'">进入微信</button>
+    <div class="footer-links">
+      <a class="footer-link" href="#">切换账号</a>
+      <div class="footer-divider"></div>
+      <a class="footer-link" href="#">仅传输文件</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

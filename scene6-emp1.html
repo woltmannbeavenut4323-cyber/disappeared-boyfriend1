@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工档案 - 张明远 - 京北仿生科技</title>
+    <style>
+        /* ==========================================================================
+           2000年代古早复古企业网页全局样式（直角、无现代圆角）
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important; /* 严格直角边框 */
+        }
+
+        body {
+            background-color: #F5F5F5;
+            margin: 0;
+            padding: 0;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", "微软雅黑", sans-serif;
+            font-size: 13px;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* 居中主容器 - 修改为响应式宽度，最大 1000px */
+        .wrapper {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-left: 1px solid #D3D3D3;
+            border-right: 1px solid #D3D3D3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==========================================================================
+           顶部导航栏（与首页一致，首页链接至 scene6.html）
+           ========================================================================== */
+        .navbar {
+            width: 100%;
+            min-height: 45px;
+            background-color: #B52322; /* 标志性红底 */
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            flex-wrap: wrap; /* 允许在移动端折行 */
+        }
+
+        .nav-links a {
+            flex: 1;
+            min-width: 80px; /* 移动端防挤压 */
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            border-right: 1px solid #D65352; /* 浅红分隔线 */
+        }
+
+        .nav-links a:last-child {
+            border-right: none;
+        }
+
+        .nav-links a:hover {
+            background-color: #D65352; /* 悬停变浅红 */
+            text-decoration: none;
+        }
+
+        /* ==========================================================================
+           主体内容区
+           ========================================================================== */
+        .main-content {
+            padding: 30px;
+            flex: 1;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            font-size: 20px;
+            color: #B52322;
+            font-weight: bold;
+            border-bottom: 2px solid #B52322;
+            padding-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        /* 档案核心布局（左侧照片，右侧表格） */
+        .profile-container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            flex-wrap: wrap; /* 允许元素流式堆叠 */
+        }
+
+        /* 员工照片：150x180 规格控制 */
+        .photo-box {
+            width: 150px;
+            height: 180px;
+            border: 1px solid #999999;
+            background-color: #EFEFEF;
+            padding: 2px;
+            flex-shrink: 0;
+        }
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 经典古早履历信息表格 */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #CCCCCC;
+            flex: 1;
+            min-width: 300px; /* 限制最小跨度以免变形 */
+        }
+
+        .info-table th, .info-table td {
+            border: 1px solid #CCCCCC;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        /* 表格灰色标签头 */
+        .info-table th {
+            background-color: #EFEFEF;
+            color: #333333;
+            font-weight: bold;
+            width: 100px;
+            text-align: center;
+        }
+
+        /* 介绍文本段落排版 */
+        .intro-p {
+            text-indent: 2em;
+            margin: 0 0 10px 0;
+            text-align: justify;
+        }
+        
+        .intro-p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 状态特殊渲染（红色细体） */
+        .status-highlight {
+            color: #FF0000;
+            font-weight: normal;
+        }
+
+        /* 补充原有缺失的返回按钮样式，保持古早扁平味 */
+        .back-btn {
+            display: inline-block;
+            padding: 6px 15px;
+            background-color: #EFEFEF;
+            color: #333333;
+            text-decoration: none;
+            border: 1px solid #CCCCCC;
+            font-size: 13px;
+        }
+        .back-btn:hover {
+            background-color: #DDDDDD;
+            color: #000000;
+        }
+
+        /* ==========================================================================
+           页脚
+           ========================================================================== */
+        .footer {
+            width: 100%;
+            border-top: 2px solid #B52322;
+            background-color: #EFEFEF;
+            padding: 15px 0;
+            text-align: center;
+            color: #666666;
+            font-size: 12px;
+            margin-top: 40px;
+        }
+
+        /* ==========================================================================
+           移动端适配规则 (要求1)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px; /* 缩减移动端外间距 */
+            }
+
+            .navbar {
+                height: auto;
+            }
+
+            .nav-links a {
+                flex: none;
+                width: 50%; /* 导航改为两列并排 */
+                font-size: 13px;
+                border-bottom: 1px solid #D65352;
+            }
+
+            .nav-links a:nth-child(2n) {
+                border-right: none; /* 每行第二个去右边框 */
+            }
+
+            .profile-container {
+                flex-direction: column; /* 布局由上下并排改为垂直从上至下 */
+                align-items: center;    /* 头像水平居中 */
+                gap: 20px;
+            }
+
+            .info-table {
+                width: 100%; /* 表格宽度拉满 */
+            }
+
+            .info-table th {
+                width: 80px; /* 适当压缩标签列宽 */
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .info-table td {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .back-btn {
+                text-align: center; /* 返回按钮在手机端水平居中 */
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        
+        <div class="navbar">
+            <div class="nav-links">
+                <a href="scene6.html">【首页】</a>
+                <a href="#">【关于我们】</a>
+                <a href="#">【新闻中心】</a>
+                <a href="#">【员工风采】</a>
+                <a href="#">【联系我们】</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h1 class="page-title">员工档案 - 张明远</h1>
+
+            <div class="profile-container">
+                
+                <div class="photo-box">
+                    <img src="https://img.cdn1.vip/i/6a1d954f4bf6e_1780323663.webp" alt="张明远">
+                </div>
+
+                <table class="info-table">
+                    <tr>
+                        <th>姓名</th>
+                        <td>张明远</td>
+                    </tr>
+                    <tr>
+                        <th>职位</th>
+                        <td>首席执行官</td>
+                    </tr>
+                    <tr>
+                        <th>入职时间</th>
+                        <td>2003年5月</td>
+                    </tr>
+                    <tr>
+                        <th>个人介绍</th>
+                        <td>
+                            <p class="intro-p">张明远先生作为公司的联合创始人及首席执行官，全面负责企业的战略规划、资本运作及整体运营管理。他拥有超过十五年的高科技企业领导经验，曾在多家纳斯达克上市的科技巨头中担任中国区高管职务，对全球科技产业的发展趋势有着深刻的洞察力。</p>
+                            <p class="intro-p">张明远先生毕业于清华大学经济管理学院，后获得斯坦福大学商学院MBA学位。在他的领导下，公司成功完成了从种子轮到B轮的多轮融资，总金额超过2亿美元，并确立了在脑机接口领域的行业领先地位。他倡导“技术向善、以人为本”的管理理念，不仅关注技术指标的突破，更强调科技成果的伦理性和社会价值。他亲自推动了与多家顶尖医院的合作，加速了产品的临床试验进程。在内部管理上，他善于激发团队的创造力与凝聚力，构建了扁平化、高效率的组织架构。张明远先生还定期主持“CEO面对面”活动，直接聆听一线工程师与科研人员的声音，确保公司的战略方向与团队的实际执行紧密结合。</p>
+                            <p class="intro-p">他的远见卓识和果断执行力，是公司不断跨越技术高峰、拓展商业版图的核心驱动力。</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>当前状态</th>
+                        <td class="status-highlight">任职时间：2003年10月-2014年10月</td>
+                    </tr>
+                    <tr>
+                        <th>备注</th>
+                        <td style="color: #999999; font-style: italic;">无</td>
+                    </tr>
+                </table>
+                <a href="scene6-employees.html" class="back-btn">返回员工列表</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2003-2014 京北仿生科技 版权所有
+        </div>
+
+    </div>
+
+</body>
+</html>

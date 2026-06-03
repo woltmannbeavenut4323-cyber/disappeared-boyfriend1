@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工风采 - 京北仿生科技</title>
+    <style>
+        /* ==========================================================================
+           2000年代古早复古企业网页全局样式（直角、无现代圆角）
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important; /* 严格直角边框 */
+        }
+
+        body {
+            background-color: #F5F5F5;
+            margin: 0;
+            padding: 0;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", "微软雅黑", sans-serif;
+            font-size: 13px;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* 居中主容器 - 保持与 scene6 相关页面宽度一致 */
+        .wrapper {
+            width: 1000px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-left: 1px solid #D3D3D3;
+            border-right: 1px solid #D3D3D3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==========================================================================
+           顶部导航栏（与首页一致，首页链接至 scene6.html，新闻中心链接至 scene6-news.html）
+           ========================================================================== */
+        .navbar {
+            width: 100%;
+            height: 45px;
+            background-color: #B52322; /* 标志性红底 */
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-links a {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            border-right: 1px solid #D65352; /* 浅红分隔线 */
+        }
+
+        .nav-links a:last-child {
+            border-right: none;
+        }
+
+        .nav-links a:hover {
+            background-color: #D65352; /* 悬停变浅红 */
+            text-decoration: none;
+        }
+
+        /* ==========================================================================
+           主体内容区
+           ========================================================================== */
+        .main-content {
+            padding: 30px;
+            flex: 1;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            font-size: 20px;
+            color: #B52322;
+            font-weight: bold;
+            border-bottom: 2px solid #B52322;
+            padding-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* 副标题（带特殊寓意） */
+        .page-subtitle {
+            font-size: 12px;
+            color: #666666;
+            margin-bottom: 30px;
+            font-style: italic;
+            border-left: 3px solid #CCCCCC;
+            padding-left: 10px;
+        }
+
+        /* ==========================================================================
+           员工列表表格布局结构（4行3列）
+           ========================================================================== */
+        .employee-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #CCCCCC;
+        }
+
+        .employee-table td {
+            width: 33.33%;
+            padding: 20px;
+            border: 1px solid #EFEFEF;
+            text-align: center;
+            vertical-align: top;
+            background-color: #FAFAFA;
+        }
+
+        /* 员工卡片内部容器 */
+        .employee-card {
+            display: inline-block;
+            text-align: center;
+        }
+
+        /* 照片外框（100x120 占位控制） */
+        .photo-container {
+            width: 100px;
+            height: 120px;
+            margin: 0 auto 12px auto;
+            border: 1px solid #999999;
+            background-color: #EFEFEF;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: filter 0.2s ease-in-out;
+        }
+
+        /* 互动设计：当鼠标移动到照片上时照片变深，且边缘出现硬阴影模拟点击质感 */
+        .photo-container:hover {
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3) !important; /* 复古硬阴影 */
+            transform: translate(-2px, -2px);
+        }
+
+        .photo-container:hover img {
+            filter: brightness(0.75); /* 照片色调变深 */
+        }
+
+        /* 姓名与职位文字排版 */
+        .emp-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 4px;
+        }
+
+        .emp-position {
+            font-size: 12px;
+            color: #B52322; /* 职位用标志性红字 */
+            font-weight: 500;
+        }
+
+        /* ==========================================================================
+           页脚
+           ========================================================================== */
+        .footer {
+            width: 100%;
+            border-top: 2px solid #B52322;
+            background-color: #EFEFEF;
+            padding: 15px 0;
+            text-align: center;
+            color: #666666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        
+        <div class="navbar">
+            <div class="nav-links">
+                <a href="scene6.html">【首页】</a>
+                <a href="scene6-about.html">【关于我们】</a>
+                <a href="scene6-news.html">【新闻中心】</a>
+                <a href="#">【员工风采】</a>
+                <a href="#">【联系我们】</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h1 class="page-title">核心研发团队</h1>
+            <div class="page-subtitle">
+                “京北仿生的每一步，都离不开这些优秀的人才——谨以此页，致敬所有为科学奉献的先行者。”
+            </div>
+
+            <table class="employee-table">
+                
+                <tr>
+                    <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp1.html'">
+                                <img src="https://img.cdn1.vip/i/6a1d954f4bf6e_1780323663.webp" alt="张明远">
+                            </div>
+                            <div class="emp-name">张明远</div>
+                            <div class="emp-position">首席执行官</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp2.html'">
+                                <img src="https://img.cdn1.vip/i/6a1d9cffb87a7_1780325631.webp" alt="陈思远">
+                            </div>
+                            <div class="emp-name">陈思远</div>
+                            <div class="emp-position">芯片研发主管</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp3.html'">
+                                <img src="https://img.cdn1.vip/i/6a1d998bbe97e_1780324747.webp" alt="王建华">
+                            </div>
+                            <div class="emp-name">王建华</div>
+                            <div class="emp-position">神经科学总监</div>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                   <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp4.html'">
+                                <img src="https://img.cdn1.vip/i/6a1d95ea60e9d_1780323818.webp" alt="李国栋">
+                            </div>
+                            <div class="emp-name">李国栋</div>
+                            <div class="emp-position">首席技术官</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp5.html'">
+                                <img src="https://img.cdn1.vip/i/6a1d9da77939f_1780325799.webp" alt="刘洋">
+                            </div>
+                            <div class="emp-name">刘洋</div>
+                            <div class="emp-position">人工智能主管</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp6.html'">
+                                <img src="https://img.cdn1.vip/i/6a1e656ff022b_1780376943.webp" alt="赵敏">
+                            </div>
+                            <div class="emp-name">赵敏</div>
+                            <div class="emp-position">生物工程主管</div>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp7.html'">
+                                <img src="https://img.cdn1.vip/i/6a1e6b8e68327_1780378510.webp" alt="孙磊">
+                            </div>
+                            <div class="emp-name">孙磊</div>
+                            <div class="emp-position">项目统筹</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp8.html'">
+                                <img src="https://img.cdn1.vip/i/6a1e6bad4d21c_1780378541.webp" alt="周晓波">
+                            </div>
+                            <div class="emp-name">周晓波</div>
+                            <div class="emp-position">硬件工程师</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp9.html'">
+                                <img src="https://img.cdn1.vip/i/6a1e6bbfd0ac9_1780378559.webp" alt="吴芳">
+                            </div>
+                            <div class="emp-name">吴芳</div>
+                            <div class="emp-position">临床测试主管</div>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp10.html'">
+                                <img src="https://img.cdn1.vip/i/6a1e6bd394900_1780378579.webp" alt="边伯贤">
+                            </div>
+                            <div class="emp-name">边伯贤</div>
+                            <div class="emp-position">数据分析员</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp11.html'">
+                                <img src="https://img.cdn1.vip/i/6a1e6cf2c42b3_1780378866.webp" alt="郑海">
+                            </div>
+                            <div class="emp-name">郑海</div>
+                            <div class="emp-position">数据分析师</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="employee-card">
+                            <div class="photo-container" onclick="window.location.href='scene6-emp12.html'">
+                                <img src="https://img.cdn1.vip/i/6a1e6cf712f57_1780378871.webp" alt="林小雨">
+                            </div>
+                            <div class="emp-name">林小雨</div>
+                            <div class="emp-position">行政主管</div>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div class="footer">
+            © 2003-2014 京北仿生科技 版权所有
+        </div>
+
+    </div>
+
+</body>
+</html>

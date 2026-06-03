@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - 京北仿生科技</title>
+    <style>
+        /* ==========================================================================
+           2000年代古早复古企业网页全局样式（直角、无现代圆角）
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important; /* 严格直角边框 */
+        }
+
+        body {
+            background-color: #F5F5F5;
+            margin: 0;
+            padding: 0;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", "微软雅黑", sans-serif;
+            font-size: 13px;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* 居中主容器 - 增加移动端最大宽度自适应，防止手机端横向撑破 */
+        .wrapper {
+            width: 1000px;
+            max-width: 100%;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-left: 1px solid #D3D3D3;
+            border-right: 1px solid #D3D3D3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==========================================================================
+           顶部导航栏
+           ========================================================================== */
+        .navbar {
+            width: 100%;
+            height: 45px;
+            background-color: #B52322; /* 标志性红底 */
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-links a {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            border-right: 1px solid #D65352; /* 浅红分隔线 */
+            white-space: nowrap; /* 防止移动端字挤压换行 */
+        }
+
+        .nav-links a:last-child {
+            border-right: none;
+        }
+
+        .nav-links a:hover {
+            background-color: #D65352; /* 悬停变浅红 */
+            text-decoration: none;
+        }
+
+        /* 主体内容区 */
+        .main-content {
+            padding: 30px;
+            flex: 1;
+        }
+
+        @media (max-width: 640px) {
+            .main-content { padding: 15px; }
+            .nav-links a { font-size: 11px; } /* 移动端导航字号微调 */
+        }
+
+        /* 页面标题 */
+        .page-title {
+            font-size: 20px;
+            color: #B52322;
+            font-weight: bold;
+            border-bottom: 2px solid #B52322;
+            padding-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        /* 公司简介排版 */
+        .company-intro {
+            margin-bottom: 30px;
+        }
+
+        .company-intro p {
+            text-indent: 2em;
+            text-align: justify;
+            margin: 0 0 12px 0;
+            font-size: 14px;
+        }
+
+        /* 发展时间轴 */
+        .timeline-section {
+            margin-bottom: 40px;
+            border: 1px solid #CCCCCC;
+            background-color: #FAFAFA;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: #B52322;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-left: 4px solid #B52322;
+            padding-left: 10px;
+        }
+
+        .timeline-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: flex-start;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-year {
+            font-weight: bold;
+            color: #B52322;
+            width: 80px;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .timeline-desc {
+            font-size: 13px;
+            color: #444444;
+        }
+
+        /* ==========================================================================
+           全景图交互区域样式
+           ========================================================================== */
+        .panorama-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        /* 600x300 容器 */
+        .panorama-viewport {
+            width: 600px;
+            max-width: 100%; /* 允许在窄屏手机上收缩视窗 */
+            height: 300px;
+            margin: 0 auto;
+            background-color: #777777; /* 灰色底色备用 */
+            border: 2px solid #333333;
+            position: relative;
+            overflow: hidden; /* 绝对禁止原生滚动条 */
+            cursor: grab;
+            user-select: none;
+            touch-action: none; /* 核心修正：阻止手机浏览器的原生随屏滚动滚轮行为 */
+        }
+
+        .panorama-viewport:active {
+            cursor: grabbing;
+        }
+
+        /* 1200x300 内部全景画布 */
+        .panorama-canvas {
+            width: 1200px;
+            height: 300px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-image: url('https://img.cdn1.vip/i/6a1eeed6ca3ee_1780412118.webp');
+            background-size: 1200px 300px;
+            background-repeat: no-repeat;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            will-change: transform;
+        }
+
+        /* 画面提示信息 */
+        .click-hint {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0,0,0,0.6);
+            color: #FFFFFF;
+            padding: 4px 8px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* 处于 60% 左右位置的白色小黑板容器 */
+        .whiteboard {
+            position: absolute;
+            left: 720px; /* 1200 * 0.60 = 720px */
+            top: 50px;
+            width: 260px;
+            height: 190px;
+            background-color: #FDFDFD;
+            border: 4px solid #555555;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            padding: 8px;
+            box-sizing: border-box;
+            font-family: "Courier New", "SimSun", monospace;
+            color: #222222;
+            text-align: left;
+            user-select: text; /* 玩家可以选中并复制密码 */
+            -webkit-user-select: text;
+        }
+
+        .board-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #B52322;
+            border-bottom: 1px dashed #999999;
+            padding-bottom: 2px;
+            margin-bottom: 6px;
+        }
+
+        .formulas {
+            font-size: 11px;
+            line-height: 1.3;
+            color: #444444;
+        }
+
+        /* 隐蔽的小字密码 */
+        .hidden-password-row {
+            font-size: 8px;
+            color: #777777; /* 极淡的颜色避开直接视线 */
+            transform: scale(0.85);
+            transform-origin: left;
+            margin-top: 8px;
+            word-break: break-all;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        /* 底部提示文字 */
+        .hint-text {
+            font-size: 12px;
+            color: #888888;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* 页脚 */
+        .footer {
+            width: 100%;
+            border-top: 2px solid #B52322;
+            background-color: #EFEFEF;
+            padding: 15px 0;
+            text-align: center;
+            color: #666666;
+            font-size: 12px;
+            margin-top: 40px;
+        }
+
+        /* 返回博客链接样式 */
+        .back-blog-link {
+            display: block;
+            margin-top: 8px;
+            color: #333333;
+            text-decoration: underline;
+        }
+        
+        .back-blog-link:hover {
+            color: #B52322;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        
+        <div class="navbar">
+            <div class="nav-links">
+                <a href="scene6.html">【首页】</a>
+                <a href="scene6-about.html">【关于我们】</a>
+                <a href="scene6-news.html">【新闻中心】</a>
+                <a href="scene6-employees.html">【员工风采】</a>
+                <a href="#">【联系我们】</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h1 class="page-title">关于京北仿生</h1>
+
+            <div class="company-intro">
+                <p>京北仿生科技有限公司成立于2003年，坐落于中关村高科技核心园区，是一家致力于前沿神经科学、生物工程与人工智能交叉领域研究的国家级高新技术企业。作为国内最早深耕脑机接口（BCI）与生物仿生义肢核心算法的开拓者之一，公司自创立伊始便以“重塑生命边界，服务人类健康”为终极愿景，积极推动科研成果向临床应用的深度转化。</p>
+                <p>依托于由国际顶尖神经科学家、芯片研发专家及临床医学教授共同构成的核心研发团队，京北仿生在多通道神经信号采集芯片、高密度柔性电极阵列、基于深度学习的神经解码算法等核心技术上连续取得重大突破。公司先后承接了多项国家级重点科研项目，并与国内外数十家三甲医院建立了长期且紧密的临床试验合作关系，为因脊髓损伤、脑卒中等导致运动功能障碍的患者提供了全新的康复可能。</p>
+                <p>在十余年的发展历程中，京北仿生始终恪守“严谨、求实、创新”的科研精神，不仅在技术指标上不断追求极限，更将科研伦理与社会价值置于企业发展的核心地位。我们坚信，通过科技与人文的有机融合，京北仿生将持续攻克生命科学领域的重重难关，为千千万万需要帮助的家庭带去重获新生的光明希望。</p>
+            </div>
+
+            <div class="timeline-section">
+                <div class="section-title">发展历程时间轴</div>
+                <ul class="timeline-list">
+                    <li class="timeline-item">
+                        <div class="timeline-year">2003年</div>
+                        <div class="timeline-desc">京北仿生科技有限公司正式注册成立，确立以脑机接口为核心发展方向。</div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-year">2005年</div>
+                        <div class="timeline-desc">成功研发第一代“神启”多通道神经信号采集原型系统，并在动物实验中通过验证。</div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-year">2008年</div>
+                        <div class="timeline-desc">完成A轮千万级融资，启动高密度柔性皮层电极的产业化攻关项目。</div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-year">2011年</div>
+                        <div class="timeline-desc">与京北第一附属医院达成深度战略合作，首款运动功能重建义肢正式进入临床测试阶段。</div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-year">2014年</div>
+                        <div class="timeline-desc">神经信号实时解码算法大版本升级，公司核心专利布局基本完成，全面跨入脑机智能新纪元。</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="panorama-section">
+                <div class="section-title">公司全景展示</div>
+                
+                <div class="panorama-viewport" id="panoViewport">
+                    <div class="click-hint">◀ 鼠标或单指左右按住拖动查看实验室全景 ▶</div>
+                    
+                    <div class="panorama-canvas" id="panoCanvas">
+                        
+                        <div class="whiteboard">
+                            <div class="board-title">Bio-Signal BCI Formula (Exp 07-B)</div>
+                            <div class="formulas">
+                                H(X) = -∑ P(x_i) log_2 P(x_i)<br>
+                                Δψ_n = ∫ [Ψ*(x) · Ĥ · Ψ(x)] dx<br>
+                                λ_max = max { |v_i| } | W · v = λ · v<br>
+                                f(t) = σ(W_rec · h_(t-1) + W_in · x_t + b)
+                            </div>
+                            <div class="hidden-password-row">
+                                备份密码2：01000001011011000110110001011111010011010011001101001101010011110101001001011001Y
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="hint-text">“实验区的黑板上，好像写了什么...”</div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <div>© 2003-2014 京北仿生科技 版权所有</div>
+            <a href="scene5.html" class="back-blog-link">◀ 返回博客</a>
+        </div>
+
+    </div>
+
+    <script>
+        const viewport = document.getElementById('panoViewport');
+        const canvas = document.getElementById('panoCanvas');
+
+        let isDragging = false;
+        let startX = 0;
+        let scrollLeftPos = 0;
+
+        // 初始化摆放位置（加载时默认偏向中左，给玩家提供拖拽空间）
+        let currentLeft = -200; 
+        canvas.style.transform = `translateX(${currentLeft}px)`;
+
+        // 获取当前最大的可往左拖拽边界（根据当前视窗实际宽度动态计算）
+        function getMinLeft() {
+            return viewport.clientWidth - 1200; // 画布宽1200
+        }
+
+        // ==========================================
+        // 1. 经典 PC 端鼠标事件
+        // ==========================================
+        viewport.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX - currentLeft;
+        });
+
+        viewport.addEventListener('mouseup', () => { isDragging = false; });
+        viewport.addEventListener('mouseleave', () => { isDragging = false; });
+
+        viewport.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            let targetLeft = e.pageX - startX;
+            let minLeft = getMinLeft();
+            
+            if (targetLeft > 0) targetLeft = 0;
+            if (targetLeft < minLeft) targetLeft = minLeft;
+            
+            currentLeft = targetLeft;
+            canvas.style.transform = `translateX(${currentLeft}px)`;
+        });
+
+        // ==========================================
+        // 2. 新增移动端触控事件支持 (Touch Events)
+        // ==========================================
+        viewport.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            // touch 事件使用 e.touches[0].pageX 捕获单指落点
+            startX = e.touches[0].pageX - currentLeft;
+        }, { passive: true });
+
+        viewport.addEventListener('touchend', () => { isDragging = false; });
+        viewport.addEventListener('touchcancel', () => { isDragging = false; });
+
+        viewport.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            let targetLeft = e.touches[0].pageX - startX;
+            let minLeft = getMinLeft();
+            
+            // 极限边界防越界约束
+            if (targetLeft > 0) targetLeft = 0;
+            if (targetLeft < minLeft) targetLeft = minLeft;
+            
+            currentLeft = targetLeft;
+            canvas.style.transform = `translateX(${currentLeft}px)`;
+        }, { passive: true });
+    </script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页 - 边伯贤的博客</title>
+    <style>
+        /* ==========================================================================
+           千禧年古早独立博客风格（纯白背景、直角、黑色正文、极简无修饰）
+           ========================================================================= */
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important; /* 严格去除现代圆角 */
+        }
+
+        body {
+            background-color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", "微软雅黑", sans-serif;
+            font-size: 14px;
+            color: #000000;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 博客主容器 */
+        .blog-container {
+            width: 750px;
+            margin: 50px auto;
+            padding: 20px 40px;
+            border: 1px solid #000000; /* 复古单色细边框 */
+        }
+
+        /* ==========================================================================
+           博客顶部：博主信息
+           ========================================================================== */
+        .blog-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 25px;
+            border-bottom: 1px dashed #000000; /* 复古虚线分割 */
+            margin-bottom: 35px;
+        }
+
+        .avatar-box {
+            width: 80px;
+            height: 80px;
+            border: 1px solid #000000;
+            padding: 2px;
+            background-color: #FFFFFF;
+        }
+
+        .avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .blogger-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .blog-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .blogger-name {
+            font-size: 14px;
+            color: #666666;
+            margin: 0;
+        }
+
+        /* ==========================================================================
+           博文列表区域
+           ========================================================================== */
+        .posts-section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .post-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #EEEEEE;
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+
+        /* 博文链接主样式 */
+        .post-link {
+            color: #000000;
+            text-decoration: none;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .post-link:hover {
+            text-decoration: underline; /* 复古标准悬停下划线 */
+            color: #666666;
+        }
+
+        /* 锁图标样式 */
+        .lock-icon {
+            font-size: 14px;
+            color: #444444;
+            user-select: none;
+        }
+
+        /* 博文日期 */
+        .post-date {
+            font-size: 13px;
+            color: #888888;
+            font-family: "Courier New", monospace;
+        }
+
+        /* ==========================================================================
+           页脚与解密互动区域
+           ========================================================================== */
+        .blog-footer {
+            margin-top: 50px;
+            padding-top: 15px;
+            border-top: 1px dashed #000000;
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            font-family: "Courier New", monospace;
+        }
+
+        /* 条件触发的最终隐藏跳转链接样式 */
+        .secret-portal-wrapper {
+            display: none; /* 默认隐藏 */
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .secret-portal-link {
+            display: inline-block;
+            color: #B52322; /* 猩红色触发异常警示感 */
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+            padding: 8px 15px;
+            border: 1px solid #B52322;
+            background-color: #FFF8F8;
+            font-family: "Courier New", "SimSun", monospace;
+        }
+
+        .secret-portal-link:hover {
+            background-color: #B52322;
+            color: #FFFFFF;
+        }
+
+        /* ==========================================================================
+           剧情互动：1秒高频系统崩溃闪烁动画
+           ========================================================================== */
+        @keyframes glitchFlash {
+            0%, 20%, 40%, 60%, 80%, 100% { background-color: #FFFFFF; filter: invert(0%); }
+            10%, 30%, 50%, 70%, 90% { background-color: #000000; filter: invert(100%); }
+        }
+
+        .active-glitch-effect {
+            animation: glitchFlash 1s linear 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blog-container">
+        
+        <div class="blog-header">
+            <div class="avatar-box">
+                <img src="https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp" alt="BK.">
+            </div>
+            <div class="blogger-info">
+                <h1 class="blog-title">边伯贤的博客</h1>
+                <p class="blogger-name">博主：BK。</p>
+            </div>
+        </div>
+
+        <div class="posts-content">
+            <div class="posts-section-title">文章列表 / Articles</div>
+            
+            <ul class="post-list">
+                
+                <li class="post-item">
+                    <a href="scene7-post1.html" class="post-link">
+                        【他的博客】
+                    </a>
+                    <span class="post-date">2025-02-14</span>
+                </li>
+
+                <li class="post-item">
+                    <a class="post-link" onclick="verifyPostPassword(2)">
+                        <span class="lock-icon">🔒</span> 【他的博客】
+                    </a>
+                    <span class="post-date">2025-03-14</span>
+                </li>
+
+                <li class="post-item">
+                    <a class="post-link" onclick="verifyPostPassword(3)">
+                        <span class="lock-icon">🔒</span> 【他的博客】
+                    </a>
+                    <span class="post-date">2025-03-20</span>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="blog-footer">
+            POWERED BY BK. BLOG © 2025 ALL RIGHTS RESERVED.
+            
+            <div class="secret-portal-wrapper" id="secretPortal">
+                <a href="scene8.ai.html" class="secret-portal-link">
+                    [系统检测：深层核心协议已激活。点击进入底层数据流...]
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 修改点：改为进入页面 20 秒后自动触发闪烁与链接显示
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const portalNode = document.getElementById('secretPortal');
+                
+                // 触发 1 秒钟屏幕高频剧烈闪烁效果
+                document.body.classList.add('active-glitch-effect');
+                
+                // 1 秒闪烁结束后，移除闪烁类，并让下方的神秘跳转链接显现出来
+                setTimeout(() => {
+                    document.body.classList.remove('active-glitch-effect');
+                    if (portalNode) {
+                        portalNode.style.display = 'block';
+                    }
+                }, 1000);
+                
+            }, 20000); // 20000毫秒 = 20秒
+        });
+
+        function verifyPostPassword(postId) {
+            if (postId === 2) {
+                // 博文2 密码验证
+                const password = prompt("请输入博文《【他的博客】(2025-03-14)》的访问密码：");
+                if (password === null) {
+                    return; // 玩家点击取消，不作处理
+                }
+                if (password === "yourenzaizhaowo") {
+                    // 记录成功解开博文2的状态
+                    localStorage.setItem('blog_post2_unlocked', 'true');
+                    window.location.href = "scene7-post2.html";
+                } else {
+                    alert("错误：访问密码不正确，拒绝进入该私密日志。");
+                }
+            } else if (postId === 3) {
+                // 博文3 密码验证
+                const password = prompt("请输入博文《【他的博客】(2025-03-20)》的访问密码：");
+                if (password === null) {
+                    return; // 玩家点击取消
+                }
+                if (password === "me") {
+                    // 记录成功解开博文3的状态
+                    localStorage.setItem('blog_post3_unlocked', 'true');
+                    window.location.href = "scene7-post3.html";
+                } else {
+                    alert("错误：访问密码不正确，拒绝进入该私密日志。");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信登录</title>
+    <style>
+        /* 全局居中背景 */
+        body {
+            background-color: #ededed;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* 400x700 严格对照 image_978dd4.png 的深灰黑外壳 */
+        .login-container {
+            width: 400px;
+            height: 700px;
+            background-color: #2d2d2d;
+            border-radius: 12px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+            position: relative;
+            box-sizing: border-box;
+            padding: 0 36px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部状态栏及图标区 */
+        .top-bar {
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #bcbcbc;
+            font-size: 14px;
+        }
+
+        .top-icons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            cursor: pointer;
+            font-size: 16px;
+            color: #888888;
+            transition: color 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: #ffffff;
+        }
+
+        /* 用户主信息区 */
+        .user-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 140px; /* 控制整体布局下移，留出上方空间 */
+        }
+
+        /* 头像缩小一倍、圆角微调、位置上移 */
+        .avatar {
+            width: 85px; 
+            height: 85px;
+            border-radius: 18px; /* 还原图中的圆角弧度 */
+            background-image: url('https://img.cdn1.vip/i/6a1c35279f2b7_1780233511.webp');
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 25px; /* 与用户名的间距 */
+        }
+
+        /* 用户名展示 */
+        .username {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+
+        /* 表单输入与按钮区 */
+        .form-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* 密码输入框 - 默认为空 */
+        .password-input {
+            width: 240px; /* 缩短输入框宽度，契合原图比例 */
+            height: 40px;
+            background-color: #3a3a3a;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            box-sizing: border-box;
+            padding: 0 12px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            text-align: center; /* 密码文字居中 */
+            transition: all 0.2s ease;
+        }
+
+        .password-input:focus {
+            background-color: #404040;
+            border-color: #07c160;
+        }
+
+        /* 输入框错误状态：变红加抖动 */
+        .password-input.error-status {
+            border-color: #fa5151 !important;
+            background-color: #423030 !important;
+            animation: shake 0.3s ease-in-out 3;
+        }
+
+        /* 纯CSS抖动动画 */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* 错误动态提示文字 */
+        .error-tips {
+            color: #fa5151;
+            font-size: 12px;
+            margin-top: 8px;
+            height: 16px;
+            visibility: hidden;
+        }
+
+        .error-tips.show {
+            visibility: visible;
+        }
+
+        /* 绿色“进入微信”按钮 */
+        .login-btn {
+            width: 240px;
+            height: 42px;
+            background-color: #07c160;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 400;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
+
+        .login-btn:hover {
+            background-color: #06ad56;
+        }
+
+        /* 底部切换账号辅助文字 */
+        .bottom-links {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #777777;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        
+        <!-- 顶部状态栏 -->
+        <div class="top-bar">
+            <span>微信</span>
+            <div class="top-icons">
+                <span class="icon-btn" title="设置">⚙</span>
+                <span class="icon-btn" title="关闭" onclick="window.history.back()">✕</span>
+            </div>
+        </div>
+
+        <!-- 主体信息 -->
+        <div class="user-profile">
+            <div class="avatar"></div>
+            <div class="username">kyoong</div>
+        </div>
+
+        <!-- 交互表单 -->
+        <div class="form-area">
+            <!-- 密码置空，增加回车直接登录支持 -->
+            <input 
+                type="password" 
+                id="pwdInput" 
+                class="password-input" 
+                placeholder="请输入密码" 
+                value="" 
+                oninput="clearErrorStyle()"
+                onkeydown="if(event.keyCode==13) validateLogin()"
+            >
+            <div id="errorTips" class="error-tips">密码错误</div>
+
+            <!-- 按钮文字同步为 进入微信 -->
+            <button class="login-btn" onclick="validateLogin()">进入微信</button>
+        </div>
+
+        <!-- 底部装饰链接 -->
+        <div class="bottom-links">
+            切换账号 &nbsp;|&nbsp; 仅传输文件
+        </div>
+
+    </div>
+
+    <script>
+        function validateLogin() {
+            var inputElement = document.getElementById('pwdInput');
+            var tipsElement = document.getElementById('errorTips');
+            var passwordValue = inputElement.value;
+
+            // 重置动画
+            inputElement.classList.remove('error-status');
+            void inputElement.offsetWidth; 
+
+            if (passwordValue === "XJ2k9LpQ7m") {
+                window.location.href = "scene4.html";
+            } else {
+                // 触发标红、抖动和提示
+                inputElement.classList.add('error-status');
+                tipsElement.classList.add('show');
+            }
+        }
+
+        function clearErrorStyle() {
+            var inputElement = document.getElementById('pwdInput');
+            var tipsElement = document.getElementById('errorTips');
+            inputElement.classList.remove('error-status');
+            tipsElement.classList.remove('show');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京北仿生科技有限责任公司 - 欢迎光临官方网站</title>
+    <style>
+        /* ==========================================================================
+           2000年代古早复古企业网页全局样式
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important; /* 彻底禁用现代圆角，严格直角边框 */
+        }
+        
+        body {
+            background-color: #F5F5F5;
+            margin: 0;
+            padding: 0;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", "微软雅黑", sans-serif;
+            font-size: 12px; /* 那个年代最经典的12px小字号 */
+            color: #333333;
+            line-height: 1.5;
+        }
+
+        a {
+            color: #333333;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #B52322;
+            text-decoration: underline;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        /* 1200px 经典居中容器 */
+        .wrapper {
+            width: 1200px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-left: 1px solid #D3D3D3;
+            border-right: 1px solid #D3D3D3;
+        }
+
+        /* ==========================================================================
+           【顶部区域】
+           ========================================================================== */
+        .header {
+            width: 100%;
+            height: 100px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #B52322; /* 深红色加粗企业底线 */
+            background-color: #FFFFFF;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-left img {
+            height: 65px;
+            display: block;
+            border: 1px dashed #CCCCCC; /* 早期常带的图片外边框 */
+        }
+
+        .brand-name {
+            font-size: 26px;
+            font-weight: bold;
+            color: #B52322;
+            letter-spacing: 2px;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        .company-fullname {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333333;
+            margin-bottom: 4px;
+        }
+
+        .company-english {
+            font-size: 10px;
+            font-family: Arial, sans-serif;
+            color: #666666;
+            letter-spacing: 0.5px;
+        }
+
+        /* ==========================================================================
+           【导航菜单】
+           ========================================================================== */
+        .navbar {
+            width: 100%;
+            height: 45px;
+            background-color: #B52322; /* 标志性红底 */
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-links a {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            border-right: 1px solid #D65352; /* 导航项之间浅红分隔线 */
+            transition: background-color 0.2s;
+        }
+
+        .nav-links a:last-child {
+            border-right: none;
+        }
+
+        .nav-links a:hover {
+            background-color: #D65352; /* 悬停变浅红 */
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        /* ==========================================================================
+           【轮播图区域】
+           ========================================================================== */
+        .banner-container {
+            width: 100%;
+            height: 400px;
+            border-bottom: 4px solid #B52322;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner-slider {
+            display: flex;
+            width: 400%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transition: left 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* 流畅的左右滑出和滑进效果 */
+        }
+
+        .banner-slide {
+            width: 25%;
+            height: 100%;
+        }
+
+        .banner-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 轮播图古早指示器按钮 */
+        .banner-dots {
+            position: absolute;
+            bottom: 12px;
+            right: 20px;
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        .banner-dot {
+            width: 16px;
+            height: 16px;
+            background: #FFFFFF;
+            border: 1px solid #B52322;
+            color: #B52322;
+            font-size: 10px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .banner-dot.active {
+            background: #B52322;
+            color: #FFFFFF;
+        }
+
+        /* ==========================================================================
+           【主体内容区】左右经典版式布局
+           ========================================================================== */
+        .main-container {
+            display: flex;
+            padding: 15px;
+            gap: 15px;
+            background-color: #FFFFFF;
+        }
+
+        .content-left {
+            width: 75%;
+        }
+
+        .content-right {
+            width: 25%;
+        }
+
+        /* 通用古早模块框框体结构 */
+        .block-module {
+            border: 1px solid #CCCCCC;
+            margin-bottom: 15px;
+            background-color: #FFFFFF;
+        }
+
+        /* 经典的红色矩形标题栏 */
+        .block-title {
+            background-color: #B52322;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 8px 12px;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .block-body {
+            padding: 15px;
+        }
+
+        /* ==========================================================================
+           【左侧特有样式】
+           ========================================================================== */
+        /* 公司简介段落 */
+        .intro-text {
+            text-indent: 2em;
+            margin: 0 0 10px 0;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #444444;
+            text-align: justify;
+        }
+        .intro-text:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 主营业务四列分栏表格化布局 */
+        .business-grid {
+            display: flex;
+            gap: 12px;
+        }
+
+        .business-col {
+            flex: 1;
+            border: 1px solid #E0E0E0;
+            background-color: #FAFAFA;
+        }
+
+        .business-col-title {
+            background-color: #EFEFEF;
+            border-bottom: 1px solid #E0E0E0;
+            padding: 6px;
+            font-weight: bold;
+            color: #B52322;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .business-col-list {
+            padding: 10px;
+        }
+
+        .business-col-list li {
+            padding: 4px 0;
+            color: #555555;
+        }
+
+        /* 新闻资讯列表样式 */
+        .news-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 5px;
+            border-bottom: 1px dashed #DDDDDD;
+        }
+
+        .news-list li:last-child {
+            border-bottom: none;
+        }
+
+        .news-link {
+            color: #333333;
+        }
+
+        .news-date {
+            color: #999999;
+            font-family: Arial, sans-serif;
+        }
+
+        /* ==========================================================================
+           【右侧特有样式】
+           ========================================================================== */
+        /* 搜索框与按钮 */
+        .search-box {
+            display: flex;
+            gap: 5px;
+        }
+
+        .search-input {
+            flex: 1;
+            height: 26px;
+            border: 1px solid #999999;
+            padding: 0 5px;
+            font-size: 12px;
+        }
+
+        .search-btn {
+            background-color: #EFEFEF;
+            border: 1px solid #999999;
+            color: #333333;
+            padding: 0 12px;
+            height: 26px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .search-btn:hover {
+            background-color: #D5D5D5;
+            border-color: #666666;
+        }
+
+        /* 快速导航垂直列表 */
+        .quick-nav-list li {
+            border-bottom: 1px solid #EFEFEF;
+        }
+
+        .quick-nav-list a {
+            display: block;
+            padding: 6px 5px;
+            color: #333333;
+        }
+
+        /* 联系方式排版 */
+        .contact-item {
+            margin-bottom: 10px;
+        }
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-label {
+            font-weight: bold;
+            color: #B52322;
+            margin-bottom: 2px;
+        }
+
+        /* ==========================================================================
+           【核心剧情弹窗层】
+           ========================================================================== */
+        .overlay-mask {
+            display: none; /* 初始隐藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            width: 380px;
+            background-color: #FFF2F2; /* 浅红色内容框 */
+            border: 3px solid #B52322;  /* 深红色边框 */
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.15); /* 古早复古硬阴影 */
+            position: relative;
+        }
+
+        .modal-header {
+            background-color: #B52322;
+            color: #FFFFFF;
+            padding: 6px 10px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-close-btn {
+            background: #FFFFFF;
+            color: #B52322;
+            border: 1px solid #B52322;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            line-height: 14px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .modal-close-btn:hover {
+            background-color: #EFEFEF;
+        }
+
+        .modal-body {
+            padding: 25px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #B52322;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           【页脚】
+           ========================================================================== */
+        .footer {
+            width: 100%;
+            border-top: 2px solid #B52322; /* 顶部的红色分隔线 */
+            background-color: #EFEFEF;
+            padding: 20px 0;
+            text-align: center;
+            color: #666666;
+        }
+
+        .footer-copyright {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #333333;
+        }
+
+        .footer-resolution {
+            font-size: 11px;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        
+        <div class="header">
+            <div class="header-left">
+                <img src="https://img.cdn1.vip/i/6a1d3b55cc654_1780300629.png" alt="京北仿生科技 Logo">
+                <span class="brand-name">京北仿生科技</span>
+            </div>
+            <div class="header-right">
+                <div class="company-fullname">京北仿生科技有限责任公司</div>
+                <div class="company-english">JINGBEI BIONIC TECHNOLOGY CO., LTD.</div>
+            </div>
+        </div>
+
+        <div class="navbar">
+            <div class="nav-links">
+                <a href="#">【首页】</a>
+                <a href="#">【关于我们】</a>
+                <a href="scene6-news.html">【新闻资讯】</a>
+                <a href="#">【主营业务】</a>
+                <a href="#">【商务合作】</a>
+                <a href="#">【加入我们】</a>
+            </div>
+        </div>
+
+        <div class="banner-container">
+            <div class="banner-slider" id="bannerSlider">
+                <div class="banner-slide"><img src="https://img.cdn1.vip/i/6a1d33b6843ad_1780298678.webp" alt="Banner 1"></div>
+                <div class="banner-slide"><img src="https://img.cdn1.vip/i/6a1d3826db396_1780299814.jpg" alt="Banner 2"></div>
+                <div class="banner-slide"><img src="https://img.cdn1.vip/i/6a1d380b58939_1780299787.jpg" alt="Banner 3"></div>
+                <div class="banner-slide"><img src="https://img.cdn1.vip/i/6a1d380f53faf_1780299791.jpg" alt="Banner 4"></div>
+            </div>
+            <div class="banner-dots">
+                <div class="banner-dot active" onclick="gotoSlide(0)">1</div>
+                <div class="banner-dot" onclick="gotoSlide(1)">2</div>
+                <div class="banner-dot" onclick="gotoSlide(2)">3</div>
+                <div class="banner-dot" onclick="gotoSlide(3)">4</div>
+            </div>
+        </div>
+
+        <div class="main-container">
+            
+            <div class="content-left">
+                
+                <div class="block-module">
+                    <h2 class="block-title">■ 公司简介</h2>
+                    <div class="block-body">
+                        <p class="intro-text">京北仿生科技有限责任公司是一家专注于人工智能、仿生系统以及智能制造技术研究的高新技术企业。</p>
+                        <p class="intro-text">公司长期致力于新型人工智能模型开发、人机交互研究以及工业自动化解决方案设计。</p>
+                        <p class="intro-text">依托先进的科研体系和工程团队，公司已形成覆盖科研、制造与产业应用的完整技术链条。</p>
+                    </div>
+                </div>
+
+                <div class="block-module">
+                    <h2 class="block-title">■ 主营业务</h2>
+                    <div class="block-body">
+                        <div class="business-grid">
+                            
+                            <div class="business-col">
+                                <div class="business-col-title">【科技研究】</div>
+                                <ul class="business-col-list">
+                                    <li> 仿生学研究</li>
+                                    <li> 神经网络技术</li>
+                                    <li> 智能控制系统</li>
+                                </ul>
+                            </div>
+
+                            <div class="business-col">
+                                <div class="business-col-title">【AI制造】</div>
+                                <ul class="business-col-list">
+                                    <li> 智能机器人</li>
+                                    <li> 自动化产线</li>
+                                    <li> AI工业平台</li>
+                                </ul>
+                            </div>
+
+                            <div class="business-col">
+                                <div class="business-col-title">【解决方案】</div>
+                                <ul class="business-col-list">
+                                    <li> 智慧城市</li>
+                                    <li> 医疗辅助</li>
+                                    <li> 数据分析</li>
+                                </ul>
+                            </div>
+
+                            <div class="business-col">
+                                <div class="business-col-title">【技术服务】</div>
+                                <ul class="business-col-list">
+                                    <li> 系统开发</li>
+                                    <li> 算法优化</li>
+                                    <li> 技术咨询</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block-module">
+                    <h2 class="block-title">■ 新闻资讯</h2>
+                    <div class="block-body">
+                        <ul class="news-list">
+                            <li>
+                                <a href="#" class="news-link">新型仿生项目正式立项</a>
+                                <span class="news-date">2024-09-12</span>
+                            </li>
+                            <li>
+                                <a href="#" class="news-link">AI制造平台升级完成</a>
+                                <span class="news-date">2024-08-25</span>
+                            </li>
+                            <li>
+                                <a href="#" class="news-link">京北科技与多所高校达成合作</a>
+                                <span class="news-date">2024-08-10</span>
+                            </li>
+                            <li>
+                                <a href="#" class="news-link">新一代智能控制系统发布</a>
+                                <span class="news-date">2024-07-29</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="content-right">
+                
+                <div class="block-module">
+                    <h2 class="block-title">■ 站内搜索</h2>
+                    <div class="block-body">
+                        <div class="search-box">
+                            <input type="text" class="search-input" id="keywordInput" placeholder="请输入检索内容...">
+                            <button class="search-btn" onclick="executeSearch()">搜索</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block-module">
+                    <h2 class="block-title">■ 快速导航</h2>
+                    <div class="block-body" style="padding: 5px 10px;">
+                        <ul class="quick-nav-list">
+                            <li><a href="#">关于我们</a></li>
+                            <li><a href="#">主营业务</a></li>
+                            <li><a href="scene6-news.html">新闻资讯</a></li>
+                            <li><a href="#">商务合作</a></li>
+                            <li><a href="#">加入我们</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="block-module">
+                    <h2 class="block-title">■ 联系方式</h2>
+                    <div class="block-body" style="font-size: 11px;">
+                        <div class="contact-item">
+                            <div class="contact-label">地址：</div>
+                            <div>京北市海淀区科技园区</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-label">电话：</div>
+                            <div>010-88888888</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-label">邮箱：</div>
+                            <div>info@jingbei-bionic.com</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <div class="footer-copyright">© 2003-2024 京北仿生科技 版权所有</div>
+            <div class="footer-resolution">建议使用1024×768以上分辨率浏览</div>
+        </div>
+
+    </div>
+
+    <div class="overlay-mask" id="plotOverlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span class="modal-title">系统核心提示</span>
+                <button class="modal-close-btn" onclick="handleModalClose()">X</button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        /*************************************************************
+         * 1. 自动轮播图逻辑组件 (流畅右滑过渡)
+         *************************************************************/
+        let currentSlideIndex = 0;
+        const totalSlides = 4;
+        const sliderElement = document.getElementById('bannerSlider');
+        const dotElements = document.querySelectorAll('.banner-dot');
+
+        function updateSliderPosition() {
+            // 通过修改绝对定位的 left 百分比驱动动画
+            sliderElement.style.left = '-' + (currentSlideIndex * 100) + '%';
+            
+            // 同步点亮下方指示器
+            dotElements.forEach((dot, index) => {
+                if (index === currentSlideIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function gotoSlide(index) {
+            currentSlideIndex = index;
+            updateSliderPosition();
+        }
+
+        function nextSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+            updateSliderPosition();
+        }
+
+        // 设定 3 秒自动轮播定时器
+        let autoSliderInterval = setInterval(nextSlide, 3000);
+
+        // 用户手动点击指示点时，重置定时器，避免画面卡顿
+        function manualControl(index) {
+            clearInterval(autoSliderInterval);
+            gotoSlide(index);
+            autoSliderInterval = setInterval(nextSlide, 3000);
+        }
+        // 将点击事件绑定至重置版函数
+        dotElements.forEach((dot, index) => {
+            dot.setAttribute('onclick', `manualControl(${index})`);
+        });
+
+
+        /*************************************************************
+         * 2. 剧情核心解密搜索逻辑组件
+         *************************************************************/
+        let unlocked = false; // 解锁状态核心变量
+        let currentStep = 0;   // 弹窗推进阶段计数器
+
+        // 剧情文案队列清单
+        const plotTexts = [
+            "你终于来了",
+            "想找回消失的记忆，不如先从这家公司调查看看",
+            "对了，这家公司的员工好像有问题"
+        ];
+
+        const overlayMask = document.getElementById('plotOverlay');
+        const modalContent = document.getElementById('modalContent');
+
+        function executeSearch() {
+            // 获取输入框，剔除前后空格
+            const rawInput = document.getElementById('keywordInput').value.trim();
+            
+            // 转换为大写进行不敏感匹配
+            const upperInput = rawInput.toUpperCase();
+
+            // 状态A：尚未解锁密钥
+            if (!unlocked) {
+                if (upperInput === "F4BR1C4T3") {
+                    // 激活剧情，弹出第一阶段连续弹窗
+                    currentStep = 0;
+                    showPlotModal(currentStep);
+                } else {
+                    alert("请输入正确的检索密匙");
+                }
+            } 
+            // 状态B：已获得高级检索特权
+            else {
+                if (rawInput === "员工") {
+                    window.location.href = "scene6-employees.html";
+                } else if (rawInput === "关于我们") {
+                    window.location.href = "scene6-about.html";
+                } else {
+                    alert("未找到相关信息");
+                }
+            }
+        }
+
+        // 调出深红边框复古弹窗
+        function showPlotModal(step) {
+            modalContent.innerText = plotTexts[step];
+            overlayMask.style.display = "flex";
+        }
+
+        // 关闭/点击下一步的处理逻辑
+        function handleModalClose() {
+            currentStep++;
+            if (currentStep < plotTexts.length) {
+                // 如果队列尚未播完，切换下一段文字
+                showPlotModal(currentStep);
+            } else {
+                // 队列播放完毕，关闭弹窗完成鉴权
+                overlayMask.style.display = "none";
+                unlocked = true;
+                alert("检索权限已开启");
+            }
+        }
+
+        // 为输入框加设回车键监听响应，优化操作手感
+        document.getElementById('keywordInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                executeSearch();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工档案 - 郑海 - 京北仿生科技</title>
+    <style>
+        /* ==========================================================================
+           2000年代古早复古企业网页全局样式（直角、无现代圆角）
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important; /* 严格直角边框 */
+        }
+
+        body {
+            background-color: #F5F5F5;
+            margin: 0;
+            padding: 0;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", "微软雅黑", sans-serif;
+            font-size: 13px;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* 居中主容器 - 修改为最大宽度自适应 */
+        .wrapper {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-left: 1px solid #D3D3D3;
+            border-right: 1px solid #D3D3D3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==========================================================================
+           顶部导航栏（与首页一致，首页链接至 scene6.html）
+           ========================================================================== */
+        .navbar {
+            width: 100%;
+            min-height: 45px;
+            background-color: #B52322; /* 标志性红底 */
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap; /* 允许移动端换行 */
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-links a {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            border-right: 1px solid #D65352; /* 浅红分隔线 */
+            height: 45px;
+        }
+
+        .nav-links a:last-child {
+            border-right: none;
+        }
+
+        .nav-links a:hover {
+            background-color: #D65352; /* 悬停变浅红 */
+            text-decoration: none;
+        }
+
+        /* ==========================================================================
+           主体内容区
+           ========================================================================== */
+        .main-content {
+            padding: 30px;
+            flex: 1;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            font-size: 20px;
+            color: #B52322;
+            font-weight: bold;
+            border-bottom: 2px solid #B52322;
+            padding-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        /* 档案核心布局（左侧照片，右侧表格） */
+        .profile-container {
+            display: flex;
+            flex-direction: column; /* 默认垂直包裹行为，适配小屏 */
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        /* PC端恢复横向并排布局 */
+        @media (min-width: 769px) {
+            .profile-container {
+                flex-direction: row;
+                gap: 30px;
+            }
+        }
+
+        /* 员工照片：150x180 规格控制 */
+        .photo-box {
+            width: 150px;
+            height: 180px;
+            border: 1px solid #999999;
+            background-color: #EFEFEF;
+            padding: 2px;
+            flex-shrink: 0;
+        }
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 经典古早履历信息表格 */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #CCCCCC;
+            margin-bottom: 20px;
+        }
+
+        .info-table th, .info-table td {
+            border: 1px solid #CCCCCC;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        /* 表格灰色标签头 */
+        .info-table th {
+            background-color: #EFEFEF;
+            color: #333333;
+            font-weight: bold;
+            width: 100px;
+            text-align: center;
+        }
+
+        /* 介绍文本段落排版 */
+        .intro-p {
+            text-indent: 2em;
+            margin: 0 0 10px 0;
+            text-align: justify;
+        }
+        
+        .intro-p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 状态特殊渲染（红色细体） */
+        .status-highlight {
+            color: #FF0000;
+            font-weight: normal;
+        }
+
+        /* 补充原有缺失的返回按钮样式，保持古早扁平味 */
+        .back-btn {
+            display: inline-block;
+            padding: 6px 15px;
+            background-color: #EFEFEF;
+            color: #333333;
+            text-decoration: none;
+            border: 1px solid #CCCCCC;
+            font-size: 13px;
+        }
+        .back-btn:hover {
+            background-color: #DDDDDD;
+            color: #000000;
+        }
+
+        /* ==========================================================================
+           页脚
+           ========================================================================== */
+        .footer {
+            width: 100%;
+            border-top: 2px solid #B52322;
+            background-color: #EFEFEF;
+            padding: 15px 0;
+            text-align: center;
+            color: #666666;
+            font-size: 12px;
+            margin-top: 40px;
+        }
+
+        /* ==========================================================================
+           移动端自适应核心媒体查询规则 (要求1)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            /* 移除移动端外层多余的物理白边框 */
+            .wrapper {
+                border-left: none;
+                border-right: none;
+            }
+
+            /* 导航栏重排：变为两列，最后一项单独撑满 */
+            .nav-links a {
+                flex: none;
+                width: 50%;
+                border-bottom: 1px solid #D65352;
+            }
+            .nav-links a:nth-child(2n) {
+                border-right: none;
+            }
+            .nav-links a:last-child {
+                width: 100%;
+                border-bottom: none;
+                border-right: none;
+            }
+
+            /* 内容区域缩小自适应内边距 */
+            .main-content {
+                padding: 15px;
+            }
+
+            /* 标题字号微调 */
+            .page-title {
+                font-size: 18px;
+                margin-bottom: 18px;
+            }
+
+            /* 移动端下图片居中展示 */
+            .photo-box {
+                margin: 0 auto;
+            }
+
+            /* 表格表头及文字大小针对小屏微调 */
+            .info-table th {
+                width: 80px;
+                padding: 8px 5px;
+                font-size: 12px;
+            }
+            .info-table td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            /* 返回按钮在移动端拉长，更易用手指触控 */
+            .back-btn {
+                display: block;
+                text-align: center;
+                padding: 10px 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        
+        <div class="navbar">
+            <div class="nav-links">
+                <a href="scene6.html">【首页】</a>
+                <a href="#">【关于我们】</a>
+                <a href="#">【新闻中心】</a>
+                <a href="#">【员工风采】</a>
+                <a href="#">【联系我们】</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h1 class="page-title">员工档案 - 郑海</h1>
+
+            <div class="profile-container">
+                
+                <div class="photo-box">
+                    <img src="https://img.cdn1.vip/i/6a1e6cf2c42b3_1780378866.webp" alt="郑海">
+                </div>
+
+                <table class="info-table">
+                    <tr>
+                        <th>姓名</th>
+                        <td>郑海</td>
+                    </tr>
+                    <tr>
+                        <th>职位</th>
+                        <td>硬件工程师</td>
+                    </tr>
+                    <tr>
+                        <th>入职时间</th>
+                        <td>2003年5月</td>
+                    </tr>
+                    <tr>
+                        <th>个人介绍</th>
+                        <td>
+                            <p class="intro-p">郑海先生担任数据分析师，负责对预处理后的神经信号进行深入的统计分析与建模，并负责临床数据的可视化报告与解读。他拥有生物统计学硕士学位，精通R语言、SPSS以及多种混合效应模型、生存分析方法。与边伯贤偏重工程化的数据预处理不同，郑海的核心工作是为临床试验的有效性评价提供确凿的统计证据。例如，他需要分析植入脑机接口后，受试者的目标动作完成准确率、反应时间、以及学习曲线是否具有统计学意义上的显著提升。</p>
+                            <p class="intro-p">他同时负责探索性数据分析，寻找神经发放模式与行为表现之间的潜在关联，为算法团队提供特征工程的新思路。郑海还负责撰写临床数据中期分析报告和总结报告，这些报告是提交给监管机构（如国家药监局）的重要文件，因此他对统计分析方法的合规性与结果的严谨性负有重大责任。</p>
+                            <p class="intro-p">他善于将复杂的统计结果转化为直观的图表和清晰的文字说明，让非专业人士（如临床医生、管理层）也能准确理解数据背后的意义。郑海是团队中连接“原始数据”与“临床结论”的关键桥梁。”</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>当前状态</th>
+                        <td class="status-highlight">任职时间：2003年5月-2014年10月</td>
+                    </tr>
+                    <tr>
+                        <th>备注</th>
+                        <td style="color: #999999; font-style: italic;">无</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <a href="scene6-employees.html" class="back-btn">返回员工列表</a>
+        </div>
+
+        <div class="footer">
+            © 2003-2014 京北仿生科技 版权所有
+        </div>
+
+    </div>
+
+</body>
+</html>

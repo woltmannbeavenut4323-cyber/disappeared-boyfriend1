@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【爱是代码无法解释的魔法】 - 边伯贤的博客</title>
+    <style>
+        /* ==========================================================================
+           千禧年独立博客风格：纯白背景、硬直角、黑色正文、极简版式
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important;
+        }
+
+        body {
+            background-color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", "微软雅黑", sans-serif;
+            font-size: 14px;
+            color: #000000;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* 主容器 */
+        .post-wrapper {
+            width: 700px;
+            margin: 40px auto;
+            padding: 20px 40px;
+            border: 1px solid #000000;
+        }
+
+        /* 返回面包屑导航 */
+        .back-nav {
+            margin-bottom: 30px;
+            font-size: 13px;
+        }
+
+        .back-nav a {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .back-nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* 博文头部 */
+        .post-header {
+            border-bottom: 1px dashed #000000;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .post-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: #666666;
+            font-family: "Courier New", monospace;
+        }
+
+        /* 博文正文 */
+        .post-content {
+            text-align: justify;
+            word-break: break-all;
+        }
+
+        .post-content p {
+            margin: 0 0 18px 0;
+            text-indent: 2em;
+        }
+
+        /* 核心特殊字变红样式 */
+        .glitch-keyword {
+            color: #000000; /* 默认黑色，不露痕迹 */
+            font-weight: normal;
+            transition: color 0.1s ease;
+        }
+
+        .glitch-keyword.active-red {
+            color: #FF0000 !important; /* 触发后变红 */
+            font-weight: bold;
+        }
+
+        /* ==========================================================================
+           文末网盘卡片及提示样式
+           ========================================================================== */
+        .netdisk-card {
+            margin-top: 50px;
+            border: 1px solid #000000;
+            padding: 20px;
+            background-color: #FAFAFA;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 5px;
+        }
+
+        .card-item {
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .card-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .card-item a {
+            color: #000000;
+            text-decoration: underline;
+        }
+
+        .card-item a:hover {
+            color: #666666;
+        }
+
+        /* 下一步动态解密提示 */
+        .next-hint {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #666666;
+            font-style: italic;
+            padding-left: 5px;
+        }
+
+        /* 页脚 */
+        .post-footer {
+            margin-top: 60px;
+            padding-top: 15px;
+            border-top: 1px dashed #000000;
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            font-family: "Courier New", monospace;
+        }
+
+        /* ==========================================================================
+           0.01秒高频全屏故障闪烁动画
+           ========================================================================== */
+        @keyframes screenFlashAnimation {
+            0% { background-color: #000000; filter: invert(100%); }
+            100% { background-color: #FFFFFF; filter: invert(0%); }
+        }
+
+        .screen-flash {
+            animation: screenFlashAnimation 0.01s linear 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="post-wrapper" id="mainWrapper">
+        
+        <div class="back-nav">
+            <a href="scene7.html">◀ 返回文章列表</a>
+        </div>
+
+        <div class="post-header">
+            <h1 class="post-title">【爱是代码无法解释的魔法】</h1>
+            <div class="post-meta">POSTED BY BK. ON 2025-02-14 12:00</div>
+        </div>
+
+        <div class="post-content">
+            <p>关于她</p>
+            <p>我其实不太喜欢写东西。</p>
+            <p>但她喜欢。</p>
+            <p>她总说，把快乐记下来，以后回头看的时候，快乐就会变成两份。</p>
+            <p>所以我开始学着记录一些和她记录<span class="glitch-keyword" id="k1">有</span>关的事情。</p>
+            <p>今天陪她去了常去的咖啡店。</p>
+            <p>她还是会在拿铁上点额外奶泡，然后喝完以后嘴角留下一圈白色痕迹。</p>
+            <p>我帮她擦掉的时候，她会下意识往后躲一下，然后再笑。</p>
+            <p>这种反应很可爱。</p>
+            <p>有时候会觉得，能这样一直看著她就很好。</p>
+            <p>她最近总问我在记什么。</p>
+            <p>其实没什么特别的。</p>
+            <p>只是习惯把一些事情整理下来。</p>
+            <p>有些数据，有些想法，有些未来可能会忘掉的东西。</p>
+            <p>如果<span class="glitch-keyword" id="k2">人</span>有一天真的忘记了，也还能找到。</p>
+            <p>毕竟总会有人忘记一些重要的事。</p>
+            <p>上周一起去栏目看电影。</p>
+            <p>电影讲什么我已经不太记得了。</p>
+            <p>我只记得她靠在我的肩膀上睡着了。</p>
+            <p>散场的时候灯光亮起，她迷迷糊糊睁开眼睛，第一句话是问我：</p>
+            <p>“结束了吗？”</p>
+            <p>我说没有。</p>
+            <p>然后牵着她慢慢走出去。</p>
+            <p>那一刻我忽然觉得。</p>
+            <p>如果时间能够停<span class="glitch-keyword" id="k3">在</span>下来就好了。</p>
+            <p>她总觉得我是个记忆力很好的人。</p>
+            <p>其实并不是。</p>
+            <p>我只是害怕遗忘。</p>
+            <p>害怕有一天<span class="glitch-keyword" id="k4">找</span>不到自己来过的痕迹。</p>
+            <p>所以我把很多东西都保存起来。</p>
+            <p>照片。</p>
+            <p>视频。</p>
+            <p>聊天记录。</p>
+            <p>语音。</p>
+            <p>甚至一些她自己都忘了的小事。</p>
+            <p>如果某天她想看。</p>
+            <p>我希望还能拿出来给她。</p>
+            <p>前几天她送了我一个钥匙扣。</p>
+            <p>很普通。</p>
+            <p>但我挂在身上了。</p>
+            <p>她笑<span class="glitch-keyword" id="k5">我</span>幼稚。</p>
+            <p>其实我只是觉得，人总要有些什么东西证明自己被爱过。</p>
+            <p>哪怕只是一个钥匙扣。</p>
+            <p>有时候会有人问我为什么这么在意这些细节。</p>
+            <p>我不知道。</p>
+            <p>可能因为有些东西一旦失去，就再也回不来了。</p>
+            <p>最近总有一种奇怪的感觉。</p>
+            <p>好像有什么事情正在发生。</p>
+            <p>又好像什么都没有发生。 </p>
+            <p>路过街道的时候会下意识回头。</p>
+            <p>坐在车上的时候会看向后视镜。</p>
+            <p>像是有人在注视着什么。</p>
+            <p>但回头的时候什么都没有。</p>
+            <p>也许只是错觉。</p>
+            <p>也许只是太累了。</p>
+            <p>她昨天又问我：</p>
+            <p>“如果有一天你突然消失怎么办？”</p>
+            <p>我笑了。</p>
+            <p>这种问题听起来很傻。</p>
+            <p>可我还是认真想了想。</p>
+            <p>如果真有那么一天。</p>
+            <p>如果我真的不在了。</p>
+            <p>我希望她不要难过太久。</p>
+            <p>我希望她能好好生活。</p>
+            <p>我希望她记得那些开心的事情。</p>
+            <p>还有。</p>
+            <p>如果有一天我不在了。</p>
+            <p>我就把我所有的东西都藏在我的网盘里给她。</p>
+            <p>密码她知道。</p>
+            <p>里面有我们的照片。</p>
+            <p>有一起去过的地方。 </p>
+            <p>有我给她写过却没发出去的话。</p>
+            <p>还有很多很多她不知道的东西。</p>
+            <p>这样即使我不在了。</p>
+            <p>她也还能找到我留下来的痕迹。</p>
+            <p>今天写到这里。</p>
+            <p>她刚刚发消息说想吃草莓蛋糕。</p>
+            <p>我要出门了。</p>
+            <p>希望回来以后还能继续写。</p>
+            <p>如果没有写完的话。</p>
+            <p>那就等下次吧。</p>
+            <p>总会有一天能写完的。</p>
+            <p>我想。</p>
+            <p>如果有一天我不在了，至少那些东西证明我来过，证明我爱过。</p>
+            <p>密码是……算了，有人会找到的。”</p>
+        </div>
+
+        <div class="netdisk-card">
+            <div class="card-title">文件共享 / Network Disk</div>
+            <div class="card-item"><strong>资源名称：</strong>边伯贤的网盘</div>
+            <div class="card-item"><strong>网盘链接：</strong><a href="https://pan.baidu.com/s/1IXV84ll1onafSOJ77D5RJQ" target="_blank">https://pan.baidu.com/s/1IXV84ll1onafSOJ77D5RJQ</a></div>
+            <div class="card-item"><strong>提取码提示：</strong>在第二篇博文</div>
+        </div>
+
+        <div class="next-hint">
+            * 提示：第二篇博文的密码，就藏在这篇文章里。
+        </div>
+
+        <div class="post-footer">
+            POWERED BY BK. BLOG © 2025 ALL RIGHTS RESERVED.
+        </div>
+
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // 设定在进入页面 60秒（60000毫秒）后，触发核心变色闪烁逻辑
+            setTimeout(startGlitchSequence, 60000);
+        });
+
+        function triggerScreenFlash() {
+            const body = document.body;
+            // 施加闪烁类名
+            body.classList.add('screen-flash');
+            // 0.01秒（10毫秒）后准时移除类名，完成一次微小高频系统故障感瞬闪
+            setTimeout(() => {
+                body.classList.remove('screen-flash');
+            }, 10);
+        }
+
+        function startGlitchSequence() {
+            // “有人在找我”五个关键字节点数组
+            const keywords = ['k1', 'k2', 'k3', 'k4', 'k5'];
+            
+            keywords.forEach((id, index) => {
+                // 后一个字距离前一个字变红中间隔 1秒 (1000ms * index)
+                setTimeout(() => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.classList.add('active-red'); // 赋予红色样式
+                        triggerScreenFlash(); // 每次变红伴随屏幕0.01秒闪烁
+                    }
+                }, index * 1000);
+            });
+        }
+    </script>
+</body>
+</html>

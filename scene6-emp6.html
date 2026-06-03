@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工档案 - 赵敏 - 京北仿生科技</title>
+    <style>
+        /* ==========================================================================
+           2000年代古早复古企业网页全局样式（直角、无现代圆角）
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important; /* 严格直角边框 */
+        }
+
+        body {
+            background-color: #F5F5F5;
+            margin: 0;
+            padding: 0;
+            font-family: "SimSun", "宋体", "Microsoft YaHei", "微软雅黑", sans-serif;
+            font-size: 13px;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* 居中主容器 - 修改为最大宽度自适应 */
+        .wrapper {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-left: 1px solid #D3D3D3;
+            border-right: 1px solid #D3D3D3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==========================================================================
+           顶部导航栏（与首页一致，首页链接至 scene6.html）
+           ========================================================================== */
+        .navbar {
+            width: 100%;
+            min-height: 45px;
+            background-color: #B52322; /* 标志性红底 */
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap; /* 允许移动端换行 */
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-links a {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            border-right: 1px solid #D65352; /* 浅红分隔线 */
+            height: 45px;
+        }
+
+        .nav-links a:last-child {
+            border-right: none;
+        }
+
+        .nav-links a:hover {
+            background-color: #D65352; /* 悬停变浅红 */
+            text-decoration: none;
+        }
+
+        /* ==========================================================================
+           主体内容区
+           ========================================================================== */
+        .main-content {
+            padding: 30px;
+            flex: 1;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            font-size: 20px;
+            color: #B52322;
+            font-weight: bold;
+            border-bottom: 2px solid #B52322;
+            padding-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        /* 档案核心布局（响应式包裹调整） */
+        .profile-container {
+            display: flex;
+            flex-direction: column; 
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        /* PC端恢复横向并排布局 */
+        @media (min-width: 769px) {
+            .profile-container {
+                flex-direction: row;
+                gap: 30px;
+            }
+        }
+
+        /* 员工照片：150x180 规格控制 */
+        .photo-box {
+            width: 150px;
+            height: 180px;
+            border: 1px solid #999999;
+            background-color: #EFEFEF;
+            padding: 2px;
+            flex-shrink: 0;
+        }
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 经典古早履历信息表格 */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #CCCCCC;
+            margin-bottom: 20px;
+        }
+
+        .info-table th, .info-table td {
+            border: 1px solid #CCCCCC;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        /* 表格灰色标签头 */
+        .info-table th {
+            background-color: #EFEFEF;
+            color: #333333;
+            font-weight: bold;
+            width: 100px;
+            text-align: center;
+        }
+
+        /* 介绍文本段落排版 */
+        .intro-p {
+            text-indent: 2em;
+            margin: 0 0 10px 0;
+            text-align: justify;
+        }
+        
+        .intro-p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 状态特殊渲染（红色细体） */
+        .status-highlight {
+            color: #FF0000;
+            font-weight: normal;
+        }
+
+        /* 补充原有缺失的返回按钮样式，保持古早扁平风格 */
+        .back-btn {
+            display: inline-block;
+            padding: 6px 15px;
+            background-color: #EFEFEF;
+            color: #333333;
+            text-decoration: none;
+            border: 1px solid #CCCCCC;
+            font-size: 13px;
+        }
+        .back-btn:hover {
+            background-color: #DDDDDD;
+            color: #000000;
+        }
+
+        /* ==========================================================================
+           页脚
+           ========================================================================== */
+        .footer {
+            width: 100%;
+            border-top: 2px solid #B52322;
+            background-color: #EFEFEF;
+            padding: 15px 0;
+            text-align: center;
+            color: #666666;
+            font-size: 12px;
+            margin-top: 40px;
+        }
+
+        /* ==========================================================================
+           移动端自适应核心媒体查询规则 (要求1)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            /* 移除小屏幕下多余的侧边大边框 */
+            .wrapper {
+                border-left: none;
+                border-right: none;
+            }
+
+            /* 导航栏重排：变为两列，最后一项单独撑满 */
+            .nav-links a {
+                flex: none;
+                width: 50%;
+                border-bottom: 1px solid #D65352;
+            }
+            .nav-links a:nth-child(2n) {
+                border-right: none;
+            }
+            .nav-links a:last-child {
+                width: 100%;
+                border-bottom: none;
+                border-right: none;
+            }
+
+            /* 内容区域缩小内边距 */
+            .main-content {
+                padding: 15px;
+            }
+
+            /* 标题字号微调 */
+            .page-title {
+                font-size: 18px;
+                margin-bottom: 18px;
+            }
+
+            /* 移动端下图片居中展示 */
+            .photo-box {
+                margin: 0 auto;
+            }
+
+            /* 表格表头及文字大小自适应微调 */
+            .info-table th {
+                width: 80px;
+                padding: 8px 5px;
+                font-size: 12px;
+            }
+            .info-table td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            /* 返回按钮在移动端更易触控 */
+            .back-btn {
+                display: block;
+                text-align: center;
+                padding: 10px 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        
+        <div class="navbar">
+            <div class="nav-links">
+                <a href="scene6.html">【首页】</a>
+                <a href="#">【关于我们】</a>
+                <a href="#">【新闻中心】</a>
+                <a href="#">【员工风采】</a>
+                <a href="#">【联系我们】</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h1 class="page-title">员工档案 - 赵敏</h1>
+
+            <div class="profile-container">
+                
+                <div class="photo-box">
+                    <img src="https://img.cdn1.vip/i/6a1e656ff022b_1780376943.webp" alt="赵敏">
+                </div>
+
+                <table class="info-table">
+                    <tr>
+                        <th>姓名</th>
+                        <td>赵敏</td>
+                    </tr>
+                    <tr>
+                        <th>职位</th>
+                        <td>人工智能主管</td>
+                    </tr>
+                    <tr>
+                        <th>入职时间</th>
+                        <td>2003年5月</td>
+                    </tr>
+                    <tr>
+                        <th>个人介绍</th>
+                        <td>
+                            <p class="intro-p">刘赵敏博士担任生物工程主管，负责神经电极、生物涂层及植入器件的生物相容性与长期稳定性研究。她拥有生物医学工程博士学位，并曾在国际顶级医疗器件公司担任高级科学家，专注于柔性神经电极的微纳加工与表面功能化改性。赵敏博士精通MEMS（微机电系统）制造工艺，并创新性地开发了多种仿生水凝胶涂层，能够有效减轻植入后的免疫排斥反应，促进电极与神经组织的融合。</p>
+                            <p class="intro-p">她领导下的生物工程实验室配备了先进的电化学工作站、共聚焦显微镜以及细胞培养设施，能够独立完成从材料合成、器件制造到体外细胞毒性测试和体内组织学评估的全链条研发。她主导设计的新型“网状”柔性电极，杨氏模量与脑组织接近，植入后引发的胶质瘢痕显著小于传统硬质探针，将有效记录时长从数月延长至数年。</p>
+                            <p class="intro-p">赵敏博士还负责制定所有植入材料的质控标准与生产工艺规范，确保批间一致性。她与神经科学团队紧密合作，通过组织切片与免疫荧光染色等技术，反复验证器件的生物安全性。她对科学的严谨态度和对动物实验伦理的高度尊重，赢得了团队内外的广泛赞誉。”</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>当前状态</th>
+                        <td class="status-highlight">任职时间：2003年5月-2014年10月</td>
+                    </tr>
+                    <tr>
+                        <th>备注</th>
+                        <td style="color: #999999; font-style: italic;">无</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <a href="scene6-employees.html" class="back-btn">返回员工列表</a>
+        </div>
+
+        <div class="footer">
+            © 2003-2014 京北仿生科技 版权所有
+        </div>
+
+    </div>
+
+</body>
+</html>
