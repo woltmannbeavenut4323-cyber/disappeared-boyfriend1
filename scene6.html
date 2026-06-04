@@ -454,6 +454,64 @@
             font-size: 11px;
             color: #999999;
         }
+
+        /* ==========================================================================
+           【新增点】识别并适配移动端的媒体查询（其余部分均完全不动）
+           ========================================================================== */
+        @media screen and (max-width: 1200px) {
+            .wrapper {
+                width: 100%;
+                border-left: none;
+                border-right: none;
+            }
+            .header {
+                height: auto;
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+                padding: 15px;
+            }
+            .header-left {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .header-right {
+                text-align: center;
+            }
+            .navbar {
+                height: auto;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+            }
+            .nav-links a {
+                flex: none;
+                width: 33.33%;
+                height: 40px;
+                border-bottom: 1px solid #D65352;
+            }
+            .nav-links a:nth-child(3n) {
+                border-right: none;
+            }
+            .banner-container {
+                height: 220px; /* 移动端调低轮播图高度防爆屏 */
+            }
+            .main-container {
+                flex-direction: column;
+                padding: 10px;
+                gap: 10px;
+            }
+            .content-left, .content-right {
+                width: 100%;
+            }
+            .business-grid {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .modal-box {
+                width: 90%; /* 保证剧情弹窗在手机上不穿模 */
+            }
+        }
     </style>
 </head>
 <body>
@@ -656,10 +714,8 @@
         const dotElements = document.querySelectorAll('.banner-dot');
 
         function updateSliderPosition() {
-            // 通过修改绝对定位的 left 百分比驱动动画
             sliderElement.style.left = '-' + (currentSlideIndex * 100) + '%';
             
-            // 同步点亮下方指示器
             dotElements.forEach((dot, index) => {
                 if (index === currentSlideIndex) {
                     dot.classList.add('active');
@@ -679,16 +735,13 @@
             updateSliderPosition();
         }
 
-        // 设定 3 秒自动轮播定时器
         let autoSliderInterval = setInterval(nextSlide, 3000);
 
-        // 用户手动点击指示点时，重置定时器，避免画面卡顿
         function manualControl(index) {
             clearInterval(autoSliderInterval);
             gotoSlide(index);
             autoSliderInterval = setInterval(nextSlide, 3000);
         }
-        // 将点击事件绑定至重置版函数
         dotElements.forEach((dot, index) => {
             dot.setAttribute('onclick', `manualControl(${index})`);
         });
@@ -697,10 +750,9 @@
         /*************************************************************
          * 2. 剧情核心解密搜索逻辑组件
          *************************************************************/
-        let unlocked = false; // 解锁状态核心变量
-        let currentStep = 0;   // 弹窗推进阶段计数器
+        let unlocked = false; 
+        let currentStep = 0;   
 
-        // 剧情文案队列清单
         const plotTexts = [
             "你终于来了",
             "想找回消失的记忆，不如先从这家公司调查看看",
@@ -711,23 +763,17 @@
         const modalContent = document.getElementById('modalContent');
 
         function executeSearch() {
-            // 获取输入框，剔除前后空格
             const rawInput = document.getElementById('keywordInput').value.trim();
-            
-            // 转换为大写进行不敏感匹配
             const upperInput = rawInput.toUpperCase();
 
-            // 状态A：尚未解锁密钥
             if (!unlocked) {
                 if (upperInput === "F4BR1C4T3") {
-                    // 激活剧情，弹出第一阶段连续弹窗
                     currentStep = 0;
                     showPlotModal(currentStep);
                 } else {
                     alert("请输入正确的检索密匙");
                 }
             } 
-            // 状态B：已获得高级检索特权
             else {
                 if (rawInput === "员工") {
                     window.location.href = "scene6-employees.html";
@@ -739,27 +785,22 @@
             }
         }
 
-        // 调出深红边框复古弹窗
         function showPlotModal(step) {
             modalContent.innerText = plotTexts[step];
             overlayMask.style.display = "flex";
         }
 
-        // 关闭/点击下一步的处理逻辑
         function handleModalClose() {
             currentStep++;
             if (currentStep < plotTexts.length) {
-                // 如果队列尚未播完，切换下一段文字
                 showPlotModal(currentStep);
             } else {
-                // 队列播放完毕，关闭弹窗完成鉴权
                 overlayMask.style.display = "none";
                 unlocked = true;
                 alert("检索权限已开启");
             }
         }
 
-        // 为输入框加设回车键监听响应，优化操作手感
         document.getElementById('keywordInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 executeSearch();
