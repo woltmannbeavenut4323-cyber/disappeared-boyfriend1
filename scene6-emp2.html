@@ -221,7 +221,7 @@
             background: #990000;
         }
 
-        /* 全屏网页内置动图播放层 */
+        /* 全屏网页内置视频播放层 */
         #video-overlay {
             position: fixed;
             top: 0;
@@ -234,7 +234,7 @@
             justify-content: center;
             align-items: center;
         }
-        #video-overlay img {
+        #video-overlay video {
             width: 100%;
             height: 100%;
             object-fit: contain;
@@ -372,11 +372,8 @@
             color: #f7a3a3;
         }
 
-        /* ==========================================================================
-           移动端自适应核心媒体查询规则 (要求1)
-           ========================================================================== */
+        /* 移动端自适应核心媒体查询规则 */
         @media (max-width: 768px) {
-            /* 顶部栏排版切换为上下堆叠结构 */
             .header-content {
                 flex-direction: column;
                 justify-content: center;
@@ -395,25 +392,17 @@
             .company-en {
                 font-size: 8px;
             }
-
-            /* 主内容区域边距调整 */
             main {
                 padding: 30px 0;
             }
-
-            /* 简介文本字体调小，提高小屏下的可读性 */
             .employee-profile {
                 font-size: 14px;
                 line-height: 1.7;
             }
-
-            /* 底部文字适配 */
             .footer-copy {
                 font-size: 12px;
                 text-align: center;
             }
-
-            /* SmartScreen 报错层在手机上的 Padding 优化 */
             #smartscreen-layer {
                 padding: 40px 20px;
             }
@@ -432,7 +421,7 @@
         <header>
             <div class="container header-content">
                 <div class="header-left">
-                    <img src="https://img.cdn1.vip/i/6a1d3b55cc654_1780300629.png" alt="Logo">
+                    <img src="images/logo1.png" alt="Logo">
                     <span>京北仿生科技</span>
                 </div>
                 <div class="header-right">
@@ -445,7 +434,7 @@
         <main>
             <div class="container" style="display: flex; flex-direction: column; align-items: center;">
                 <div class="photo-container" id="photo-box">
-                    <img id="photo" src="https://img.cdn1.vip/i/6a1eb98fe1cb4_1780398479.webp" alt="员工档案照片">
+                    <img id="photo" src="images/yuangong4.png" alt="员工档案照片">
                 </div>
 
                 <div class="date-display-zone">
@@ -467,7 +456,10 @@
     </div>
 
     <div id="video-overlay">
-        <img id="scary-video" src="https://img.cdn1.vip/i/6a1eb9fcdb24d_1780398588.webp" alt="动态效果">
+        <video id="scary-video" autoplay muted loop playsinline>
+            <source src="images/yuangong4.2.mp4" type="video/mp4">
+            您的浏览器不支持视频播放。
+        </video>
     </div>
 
     <dialog id="time-dialog" oncancel="return false;">
@@ -512,6 +504,8 @@
         photoBox.addEventListener('click', function() {
             if (!isVideoPlayed) {
                 videoOverlay.style.display = 'flex';
+                // 如果是视频，确保触发播放
+                scaryVideo.play();
                 
                 setTimeout(() => {
                     endVideoSession();
@@ -522,6 +516,7 @@
         // 结束全屏效果，切换回主页并在任职时间位置触发打字机
         function endVideoSession() {
             videoOverlay.style.display = 'none';
+            scaryVideo.pause(); // 停止播放
             isVideoPlayed = true; 
 
             // 清空原有任职时间，替换为打字机结构
@@ -589,13 +584,13 @@
 
 
         // 交互 3：定时故障机制 - 15秒自动强制变成红屏
-        const THREE_MINUTES = 15000; 
+        const HORROR_LIMIT = 15000; 
         
         setTimeout(function horrorEndState() {
             smartScreenLayer.style.display = 'block';
             document.body.style.overflow = 'hidden'; 
             document.body.className = ''; 
-        }, THREE_MINUTES);
+        }, HORROR_LIMIT);
 
     </script>
 </body>
